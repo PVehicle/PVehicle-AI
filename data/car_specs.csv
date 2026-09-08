@@ -1,0 +1,197 @@
+﻿class_id,class_name,brand,model,body_style,year,seats,segment,price_million_vnd,fuel_l_per_100km,data_source
+1,AM General Hummer SUV 2000,AM General,Hummer,SUV,2000,7,economy,522.2,12.5,derived+simulated
+2,Acura RL Sedan 2012,Acura,RL,Sedan,2012,5,luxury,1699.8,9.3,derived+simulated
+3,Acura TL Sedan 2012,Acura,TL,Sedan,2012,5,luxury,1544.4,7.9,derived+simulated
+4,Acura TL Type-S 2008,Acura,TL Type-S,Sedan,2008,5,luxury,1487.1,9.2,derived+simulated
+5,Acura TSX Sedan 2012,Acura,TSX,Sedan,2012,5,luxury,2036.7,7.8,derived+simulated
+6,Acura Integra Type R 2001,Acura,Integra Type R,Coupe,2001,4,luxury,1810.5,13.7,derived+simulated
+7,Acura ZDX Hatchback 2012,Acura,ZDX,Hatchback,2012,5,luxury,1654.2,7.8,derived+simulated
+8,Aston Martin V8 Vantage Convertible 2012,Aston Martin,V8 Vantage,Convertible,2012,4,exotic,16372.0,15.9,derived+simulated
+9,Aston Martin V8 Vantage Coupe 2012,Aston Martin,V8 Vantage,Coupe,2012,4,exotic,13802.7,16.6,derived+simulated
+10,Aston Martin Virage Convertible 2012,Aston Martin,Virage,Convertible,2012,4,exotic,15862.4,16.1,derived+simulated
+11,Aston Martin Virage Coupe 2012,Aston Martin,Virage,Coupe,2012,4,exotic,15783.1,15.7,derived+simulated
+12,Audi RS 4 Convertible 2008,Audi,RS 4,Convertible,2008,4,luxury,2514.7,12.1,derived+simulated
+13,Audi A5 Coupe 2012,Audi,A5,Coupe,2012,4,luxury,1838.6,9.9,derived+simulated
+14,Audi TTS Coupe 2012,Audi,TTS,Coupe,2012,4,luxury,2103.1,11.7,derived+simulated
+15,Audi R8 Coupe 2012,Audi,R8,Coupe,2012,2,luxury,2079.8,11.2,derived+simulated
+16,Audi V8 Sedan 1994,Audi,V8,Sedan,1994,5,luxury,1305.1,10.7,derived+simulated
+17,Audi 100 Sedan 1994,Audi,100,Sedan,1994,5,luxury,1458.8,11.4,derived+simulated
+18,Audi 100 Wagon 1994,Audi,100,Wagon,1994,5,luxury,1148.0,11.0,derived+simulated
+19,Audi TT Hatchback 2011,Audi,TT,Hatchback,2011,5,luxury,1371.0,7.6,derived+simulated
+20,Audi S6 Sedan 2011,Audi,S6,Sedan,2011,5,luxury,1974.1,8.8,derived+simulated
+21,Audi S5 Convertible 2012,Audi,S5,Convertible,2012,4,luxury,2402.6,11.6,derived+simulated
+22,Audi S5 Coupe 2012,Audi,S5,Coupe,2012,4,luxury,2184.0,10.9,derived+simulated
+23,Audi S4 Sedan 2012,Audi,S4,Sedan,2012,5,luxury,1515.2,7.9,derived+simulated
+24,Audi S4 Sedan 2007,Audi,S4,Sedan,2007,5,luxury,1365.8,10.1,derived+simulated
+25,Audi TT RS Coupe 2012,Audi,TT RS,Coupe,2012,4,luxury,2547.3,11.7,derived+simulated
+26,BMW ActiveHybrid 5 Sedan 2012,BMW,ActiveHybrid 5,Sedan,2012,5,luxury,1597.3,8.8,derived+simulated
+27,BMW 1 Series Convertible 2012,BMW,1 Series,Convertible,2012,4,luxury,2475.8,12.0,derived+simulated
+28,BMW 1 Series Coupe 2012,BMW,1 Series,Coupe,2012,4,luxury,1899.7,11.3,derived+simulated
+29,BMW 3 Series Sedan 2012,BMW,3 Series,Sedan,2012,5,luxury,2105.7,8.3,derived+simulated
+30,BMW 3 Series Wagon 2012,BMW,3 Series,Wagon,2012,5,luxury,1641.6,8.6,derived+simulated
+31,BMW 6 Series Convertible 2007,BMW,6 Series,Convertible,2007,4,luxury,2371.1,11.6,derived+simulated
+32,BMW X5 SUV 2007,BMW,X5,SUV,2007,7,luxury,2276.6,13.4,derived+simulated
+33,BMW X6 SUV 2012,BMW,X6,SUV,2012,7,luxury,2024.2,13.5,derived+simulated
+34,BMW M3 Coupe 2012,BMW,M3,Coupe,2012,4,luxury,2455.7,10.0,derived+simulated
+35,BMW M5 Sedan 2010,BMW,M5,Sedan,2010,5,luxury,2038.1,9.6,derived+simulated
+36,BMW M6 Convertible 2010,BMW,M6,Convertible,2010,4,luxury,2523.4,12.0,derived+simulated
+37,BMW X3 SUV 2012,BMW,X3,SUV,2012,7,luxury,2548.8,13.8,derived+simulated
+38,BMW Z4 Convertible 2012,BMW,Z4,Convertible,2012,4,luxury,2432.9,11.3,derived+simulated
+39,Bentley Continental Supersports Conv. Convertible 2012,Bentley,Continental Supersports Conv.,Convertible,2012,4,exotic,19026.9,16.4,derived+simulated
+40,Bentley Arnage Sedan 2009,Bentley,Arnage,Sedan,2009,5,exotic,10673.9,12.7,derived+simulated
+41,Bentley Mulsanne Sedan 2011,Bentley,Mulsanne,Sedan,2011,5,exotic,13074.5,12.6,derived+simulated
+42,Bentley Continental GT Coupe 2012,Bentley,Continental GT,Coupe,2012,4,exotic,14527.3,15.4,derived+simulated
+43,Bentley Continental GT Coupe 2007,Bentley,Continental GT,Coupe,2007,4,exotic,14164.0,17.2,derived+simulated
+44,Bentley Continental Flying Spur Sedan 2007,Bentley,Continental Flying Spur,Sedan,2007,5,exotic,12474.7,13.4,derived+simulated
+45,Bugatti Veyron 16.4 Convertible 2009,Bugatti,Veyron 16.4,Convertible,2009,2,exotic,17136.4,16.2,derived+simulated
+46,Bugatti Veyron 16.4 Coupe 2009,Bugatti,Veyron 16.4,Coupe,2009,2,exotic,13649.1,17.4,derived+simulated
+47,Buick Regal GS 2012,Buick,Regal GS,Sedan,2012,5,luxury,1803.5,8.5,derived+simulated
+48,Buick Rainier SUV 2007,Buick,Rainier,SUV,2007,7,luxury,2039.5,13.0,derived+simulated
+49,Buick Verano Sedan 2012,Buick,Verano,Sedan,2012,5,luxury,1977.1,9.4,derived+simulated
+50,Buick Enclave SUV 2012,Buick,Enclave,SUV,2012,7,luxury,2099.3,13.9,derived+simulated
+51,Cadillac CTS-V Sedan 2012,Cadillac,CTS-V,Sedan,2012,5,luxury,1864.3,7.8,derived+simulated
+52,Cadillac SRX SUV 2012,Cadillac,SRX,SUV,2012,7,luxury,2598.3,12.7,derived+simulated
+53,Cadillac Escalade EXT Crew Cab 2007,Cadillac,Escalade EXT,Pickup,2007,5,luxury,1546.8,13.5,derived+simulated
+54,Chevrolet Silverado 1500 Hybrid Crew Cab 2012,Chevrolet,Silverado 1500 Hybrid,Pickup,2012,5,economy,602.7,12.2,derived+simulated
+55,Chevrolet Corvette Convertible 2012,Chevrolet,Corvette,Convertible,2012,2,economy,840.0,10.1,derived+simulated
+56,Chevrolet Corvette ZR1 2012,Chevrolet,Corvette ZR1,Coupe,2012,2,exotic,13832.7,15.1,derived+simulated
+57,Chevrolet Corvette Ron Fellows Edition Z06 2007,Chevrolet,Corvette Ron Fellows Edition Z06,Coupe,2007,2,exotic,12814.6,17.3,derived+simulated
+58,Chevrolet Traverse SUV 2012,Chevrolet,Traverse,SUV,2012,7,economy,674.4,11.2,derived+simulated
+59,Chevrolet Camaro Convertible 2012,Chevrolet,Camaro,Convertible,2012,4,economy,850.3,9.2,derived+simulated
+60,Chevrolet HHR SS 2010,Chevrolet,HHR SS,Wagon,2010,5,economy,528.3,9.0,derived+simulated
+61,Chevrolet Impala Sedan 2007,Chevrolet,Impala,Sedan,2007,5,economy,551.8,7.7,derived+simulated
+62,Chevrolet Tahoe Hybrid SUV 2012,Chevrolet,Tahoe Hybrid,SUV,2012,7,economy,648.3,11.4,derived+simulated
+63,Chevrolet Sonic Sedan 2012,Chevrolet,Sonic,Sedan,2012,5,economy,494.2,7.7,derived+simulated
+64,Chevrolet Express Cargo Van 2007,Chevrolet,Express Cargo,Van,2007,8,economy,434.1,12.5,derived+simulated
+65,Chevrolet Avalanche Crew Cab 2012,Chevrolet,Avalanche,Pickup,2012,5,economy,725.9,12.9,derived+simulated
+66,Chevrolet Cobalt SS 2010,Chevrolet,Cobalt SS,Coupe,2010,4,economy,775.2,8.9,derived+simulated
+67,Chevrolet Malibu Hybrid Sedan 2010,Chevrolet,Malibu Hybrid,Sedan,2010,5,economy,584.5,8.0,derived+simulated
+68,Chevrolet TrailBlazer SS 2009,Chevrolet,TrailBlazer SS,SUV,2009,5,economy,648.1,11.5,derived+simulated
+69,Chevrolet Silverado 2500HD Regular Cab 2012,Chevrolet,Silverado 2500HD,Pickup,2012,3,economy,738.0,12.3,derived+simulated
+70,Chevrolet Silverado 1500 Classic Extended Cab 2007,Chevrolet,Silverado 1500 Classic,Pickup,2007,5,economy,530.7,12.3,derived+simulated
+71,Chevrolet Express Van 2007,Chevrolet,Express,Van,2007,8,economy,598.8,11.4,derived+simulated
+72,Chevrolet Monte Carlo Coupe 2007,Chevrolet,Monte Carlo,Coupe,2007,4,economy,620.4,10.3,derived+simulated
+73,Chevrolet Malibu Sedan 2007,Chevrolet,Malibu,Sedan,2007,5,economy,525.3,7.6,derived+simulated
+74,Chevrolet Silverado 1500 Extended Cab 2012,Chevrolet,Silverado 1500,Pickup,2012,5,economy,637.0,11.4,derived+simulated
+75,Chevrolet Silverado 1500 Regular Cab 2012,Chevrolet,Silverado 1500,Pickup,2012,3,economy,694.1,12.2,derived+simulated
+76,Chrysler Aspen SUV 2009,Chrysler,Aspen,SUV,2009,7,economy,702.8,11.5,derived+simulated
+77,Chrysler Sebring Convertible 2010,Chrysler,Sebring,Convertible,2010,4,economy,734.6,9.7,derived+simulated
+78,Chrysler Town and Country Minivan 2012,Chrysler,Town and Country,Minivan,2012,7,economy,734.6,10.6,derived+simulated
+79,Chrysler 300 SRT-8 2010,Chrysler,300 SRT-8,Sedan,2010,5,luxury,1678.0,8.3,derived+simulated
+80,Chrysler Crossfire Convertible 2008,Chrysler,Crossfire,Convertible,2008,4,economy,826.4,10.8,derived+simulated
+81,Chrysler PT Cruiser Convertible 2008,Chrysler,PT Cruiser,Convertible,2008,4,economy,761.4,11.6,derived+simulated
+82,Daewoo Nubira Wagon 2002,Daewoo,Nubira,Wagon,2002,5,economy,429.1,8.7,derived+simulated
+83,Dodge Caliber Wagon 2012,Dodge,Caliber,Wagon,2012,5,economy,541.7,8.6,derived+simulated
+84,Dodge Caliber Wagon 2007,Dodge,Caliber,Wagon,2007,5,economy,661.2,8.6,derived+simulated
+85,Dodge Caravan Minivan 1997,Dodge,Caravan,Minivan,1997,7,economy,508.2,12.4,derived+simulated
+86,Dodge Ram Pickup 3500 Crew Cab 2010,Dodge,Ram Pickup 3500,Pickup,2010,5,economy,670.8,11.3,derived+simulated
+87,Dodge Ram Pickup 3500 Quad Cab 2009,Dodge,Ram Pickup 3500,Pickup,2009,5,economy,521.9,11.4,derived+simulated
+88,Dodge Sprinter Cargo Van 2009,Dodge,Sprinter Cargo,Van,2009,8,economy,482.8,12.0,derived+simulated
+89,Dodge Journey SUV 2012,Dodge,Journey,SUV,2012,7,economy,660.1,11.5,derived+simulated
+90,Dodge Dakota Crew Cab 2010,Dodge,Dakota,Pickup,2010,5,economy,580.7,12.1,derived+simulated
+91,Dodge Dakota Club Cab 2007,Dodge,Dakota,Pickup,2007,5,economy,682.7,13.2,derived+simulated
+92,Dodge Magnum Wagon 2008,Dodge,Magnum,Wagon,2008,5,economy,579.6,9.1,derived+simulated
+93,Dodge Challenger SRT8 2011,Dodge,Challenger SRT8,Coupe,2011,4,luxury,2224.9,11.2,derived+simulated
+94,Dodge Durango SUV 2012,Dodge,Durango,SUV,2012,7,economy,615.6,11.3,derived+simulated
+95,Dodge Durango SUV 2007,Dodge,Durango,SUV,2007,7,economy,638.5,12.0,derived+simulated
+96,Dodge Charger Sedan 2012,Dodge,Charger,Sedan,2012,5,economy,677.6,6.9,derived+simulated
+97,Dodge Charger SRT-8 2009,Dodge,Charger SRT-8,Sedan,2009,5,luxury,1631.1,8.5,derived+simulated
+98,Eagle Talon Hatchback 1998,Eagle,Talon,Hatchback,1998,5,economy,321.3,8.6,derived+simulated
+99,FIAT 500 Abarth 2012,FIAT,500 Abarth,Hatchback,2012,4,economy,484.9,6.9,derived+simulated
+100,FIAT 500 Convertible 2012,FIAT,500,Convertible,2012,4,economy,898.7,9.9,derived+simulated
+101,Ferrari FF Coupe 2012,Ferrari,FF,Coupe,2012,2,exotic,12502.0,14.7,derived+simulated
+102,Ferrari California Convertible 2012,Ferrari,California,Convertible,2012,2,exotic,16222.8,15.6,derived+simulated
+103,Ferrari 458 Italia Convertible 2012,Ferrari,458 Italia,Convertible,2012,2,exotic,15168.7,16.6,derived+simulated
+104,Ferrari 458 Italia Coupe 2012,Ferrari,458 Italia,Coupe,2012,2,exotic,15065.8,14.1,derived+simulated
+105,Fisker Karma Sedan 2012,Fisker,Karma,Sedan,2012,2,exotic,10495.4,12.3,derived+simulated
+106,Ford F-450 Super Duty Crew Cab 2012,Ford,F-450 Super Duty,Pickup,2012,5,economy,560.6,10.8,derived+simulated
+107,Ford Mustang Convertible 2007,Ford,Mustang,Convertible,2007,4,economy,728.1,10.5,derived+simulated
+108,Ford Freestar Minivan 2007,Ford,Freestar,Minivan,2007,7,economy,631.7,12.0,derived+simulated
+109,Ford Expedition EL SUV 2009,Ford,Expedition EL,SUV,2009,7,economy,777.3,11.6,derived+simulated
+110,Ford Edge SUV 2012,Ford,Edge,SUV,2012,7,economy,799.7,10.1,derived+simulated
+111,Ford Ranger SuperCab 2011,Ford,Ranger,Pickup,2011,5,economy,591.5,11.0,derived+simulated
+112,Ford GT Coupe 2006,Ford,GT,Coupe,2006,4,economy,747.4,9.4,derived+simulated
+113,Ford F-150 Regular Cab 2012,Ford,F-150,Pickup,2012,3,economy,548.0,13.1,derived+simulated
+114,Ford F-150 Regular Cab 2007,Ford,F-150,Pickup,2007,3,economy,611.6,13.9,derived+simulated
+115,Ford Focus Sedan 2007,Ford,Focus,Sedan,2007,5,economy,575.1,8.6,derived+simulated
+116,Ford E-Series Wagon Van 2012,Ford,E-Series Wagon,Wagon,2012,5,economy,549.2,7.2,derived+simulated
+117,Ford Fiesta Sedan 2012,Ford,Fiesta,Sedan,2012,5,economy,608.1,7.0,derived+simulated
+118,GMC Terrain SUV 2012,GMC,Terrain,SUV,2012,7,economy,780.2,10.6,derived+simulated
+119,GMC Savana Van 2012,GMC,Savana,Van,2012,8,economy,617.6,10.4,derived+simulated
+120,GMC Yukon Hybrid SUV 2012,GMC,Yukon Hybrid,SUV,2012,7,economy,755.8,10.9,derived+simulated
+121,GMC Acadia SUV 2012,GMC,Acadia,SUV,2012,7,economy,779.4,11.6,derived+simulated
+122,GMC Canyon Extended Cab 2012,GMC,Canyon,Pickup,2012,5,economy,710.6,12.7,derived+simulated
+123,Geo Metro Convertible 1993,Geo,Metro,Convertible,1993,4,economy,530.1,13.6,derived+simulated
+124,HUMMER H3T Crew Cab 2010,HUMMER,H3T,Pickup,2010,5,economy,580.2,12.1,derived+simulated
+125,HUMMER H2 SUT Crew Cab 2009,HUMMER,H2 SUT,Pickup,2009,5,economy,648.3,12.6,derived+simulated
+126,Honda Odyssey Minivan 2012,Honda,Odyssey,Minivan,2012,7,economy,709.0,10.0,derived+simulated
+127,Honda Odyssey Minivan 2007,Honda,Odyssey,Minivan,2007,7,economy,632.8,11.8,derived+simulated
+128,Honda Accord Coupe 2012,Honda,Accord,Coupe,2012,4,economy,780.2,10.2,derived+simulated
+129,Honda Accord Sedan 2012,Honda,Accord,Sedan,2012,5,economy,593.0,7.1,derived+simulated
+130,Hyundai Veloster Hatchback 2012,Hyundai,Veloster,Hatchback,2012,5,economy,543.3,6.7,derived+simulated
+131,Hyundai Santa Fe SUV 2012,Hyundai,Santa Fe,SUV,2012,7,economy,683.5,11.1,derived+simulated
+132,Hyundai Tucson SUV 2012,Hyundai,Tucson,SUV,2012,7,economy,757.1,10.2,derived+simulated
+133,Hyundai Veracruz SUV 2012,Hyundai,Veracruz,SUV,2012,7,economy,746.6,10.7,derived+simulated
+134,Hyundai Sonata Hybrid Sedan 2012,Hyundai,Sonata Hybrid,Sedan,2012,5,economy,636.8,7.6,derived+simulated
+135,Hyundai Elantra Sedan 2007,Hyundai,Elantra,Sedan,2007,5,economy,471.7,8.1,derived+simulated
+136,Hyundai Accent Sedan 2012,Hyundai,Accent,Sedan,2012,5,economy,594.4,7.0,derived+simulated
+137,Hyundai Genesis Sedan 2012,Hyundai,Genesis,Sedan,2012,5,economy,580.4,7.9,derived+simulated
+138,Hyundai Sonata Sedan 2012,Hyundai,Sonata,Sedan,2012,5,economy,648.8,8.2,derived+simulated
+139,Hyundai Elantra Touring Hatchback 2012,Hyundai,Elantra Touring,Hatchback,2012,5,economy,541.0,6.7,derived+simulated
+140,Hyundai Azera Sedan 2012,Hyundai,Azera,Sedan,2012,5,economy,494.0,7.5,derived+simulated
+141,Infiniti G Coupe IPL 2012,Infiniti,G Coupe IPL,Coupe,2012,4,luxury,2284.0,10.7,derived+simulated
+142,Infiniti QX56 SUV 2011,Infiniti,QX56,SUV,2011,7,luxury,2517.5,13.9,derived+simulated
+143,Isuzu Ascender SUV 2008,Isuzu,Ascender,SUV,2008,7,economy,702.6,11.0,derived+simulated
+144,Jaguar XK XKR 2012,Jaguar,XK XKR,Coupe,2012,4,luxury,2249.8,10.3,derived+simulated
+145,Jeep Patriot SUV 2012,Jeep,Patriot,SUV,2012,7,economy,616.6,11.0,derived+simulated
+146,Jeep Wrangler SUV 2012,Jeep,Wrangler,SUV,2012,7,economy,726.1,10.8,derived+simulated
+147,Jeep Liberty SUV 2012,Jeep,Liberty,SUV,2012,7,economy,862.2,11.0,derived+simulated
+148,Jeep Grand Cherokee SUV 2012,Jeep,Grand Cherokee,SUV,2012,7,economy,656.1,10.3,derived+simulated
+149,Jeep Compass SUV 2012,Jeep,Compass,SUV,2012,7,economy,619.7,10.6,derived+simulated
+150,Lamborghini Reventon Coupe 2008,Lamborghini,Reventon,Coupe,2008,2,exotic,13631.0,16.7,derived+simulated
+151,Lamborghini Aventador Coupe 2012,Lamborghini,Aventador,Coupe,2012,2,exotic,13924.2,14.0,derived+simulated
+152,Lamborghini Gallardo LP 570-4 Superleggera 2012,Lamborghini,Gallardo LP 570-4 Superleggera,Coupe,2012,2,exotic,15948.3,15.0,derived+simulated
+153,Lamborghini Diablo Coupe 2001,Lamborghini,Diablo,Coupe,2001,2,exotic,11687.0,17.9,derived+simulated
+154,Land Rover Range Rover SUV 2012,Land Rover,Range Rover,SUV,2012,7,luxury,2184.4,13.8,derived+simulated
+155,Land Rover LR2 SUV 2012,Land Rover,LR2,SUV,2012,7,luxury,2426.8,12.5,derived+simulated
+156,Lincoln Town Car Sedan 2011,Lincoln,Town Car,Sedan,2011,5,luxury,1960.0,8.9,derived+simulated
+157,MINI Cooper Roadster Convertible 2012,MINI,Cooper Roadster,Convertible,2012,4,economy,876.2,10.9,derived+simulated
+158,Maybach Landaulet Convertible 2012,Maybach,Landaulet,Convertible,2012,4,exotic,18674.8,17.2,derived+simulated
+159,Mazda Tribute SUV 2011,Mazda,Tribute,SUV,2011,7,economy,752.6,10.9,derived+simulated
+160,McLaren MP4-12C Coupe 2012,McLaren,MP4-12C,Coupe,2012,2,exotic,14143.0,13.8,derived+simulated
+161,Mercedes-Benz 300-Class Convertible 1993,Mercedes-Benz,300-Class,Convertible,1993,4,luxury,1640.2,14.2,derived+simulated
+162,Mercedes-Benz C-Class Sedan 2012,Mercedes-Benz,C-Class,Sedan,2012,5,luxury,1579.1,8.0,derived+simulated
+163,Mercedes-Benz SL-Class Coupe 2009,Mercedes-Benz,SL-Class,Coupe,2009,4,luxury,1914.4,11.3,derived+simulated
+164,Mercedes-Benz E-Class Sedan 2012,Mercedes-Benz,E-Class,Sedan,2012,5,luxury,1663.4,8.0,derived+simulated
+165,Mercedes-Benz S-Class Sedan 2012,Mercedes-Benz,S-Class,Sedan,2012,5,luxury,2084.5,9.4,derived+simulated
+166,Mercedes-Benz Sprinter Van 2012,Mercedes-Benz,Sprinter,Van,2012,8,luxury,1809.3,14.0,derived+simulated
+167,Mitsubishi Lancer Sedan 2012,Mitsubishi,Lancer,Sedan,2012,5,economy,594.0,7.7,derived+simulated
+168,Nissan Leaf Hatchback 2012,Nissan,Leaf,Hatchback,2012,5,economy,504.3,7.1,derived+simulated
+169,Nissan NV Passenger Van 2012,Nissan,NV Passenger,Van,2012,8,economy,571.3,10.8,derived+simulated
+170,Nissan Juke Hatchback 2012,Nissan,Juke,Hatchback,2012,5,economy,440.6,6.0,derived+simulated
+171,Nissan 240SX Coupe 1998,Nissan,240SX,Coupe,1998,4,economy,522.6,10.6,derived+simulated
+172,Plymouth Neon Coupe 1999,Plymouth,Neon,Coupe,1999,4,economy,524.0,11.3,derived+simulated
+173,Porsche Panamera Sedan 2012,Porsche,Panamera,Sedan,2012,2,economy,627.5,6.9,derived+simulated
+174,Ram C/V Cargo Van Minivan 2012,Ram,C/V Cargo Van,Minivan,2012,7,economy,728.6,10.6,derived+simulated
+175,Rolls-Royce Phantom Drophead Coupe Convertible 2012,Rolls-Royce,Phantom Drophead Coupe,Convertible,2012,4,exotic,15461.2,16.7,derived+simulated
+176,Rolls-Royce Ghost Sedan 2012,Rolls-Royce,Ghost,Sedan,2012,5,exotic,13830.7,10.9,derived+simulated
+177,Rolls-Royce Phantom Sedan 2012,Rolls-Royce,Phantom,Sedan,2012,5,exotic,13327.9,12.8,derived+simulated
+178,Scion xD Hatchback 2012,Scion,xD,Hatchback,2012,5,economy,443.3,7.0,derived+simulated
+179,Spyker C8 Convertible 2009,Spyker,C8,Convertible,2009,2,exotic,16576.8,16.5,derived+simulated
+180,Spyker C8 Coupe 2009,Spyker,C8,Coupe,2009,2,exotic,14556.3,14.7,derived+simulated
+181,Suzuki Aerio Sedan 2007,Suzuki,Aerio,Sedan,2007,5,economy,590.1,8.1,derived+simulated
+182,Suzuki Kizashi Sedan 2012,Suzuki,Kizashi,Sedan,2012,5,economy,620.9,7.9,derived+simulated
+183,Suzuki SX4 Hatchback 2012,Suzuki,SX4,Hatchback,2012,5,economy,566.4,5.9,derived+simulated
+184,Suzuki SX4 Sedan 2012,Suzuki,SX4,Sedan,2012,5,economy,611.9,7.6,derived+simulated
+185,Tesla Model S Sedan 2012,Tesla,Model S,Sedan,2012,5,exotic,11038.5,13.1,derived+simulated
+186,Toyota Sequoia SUV 2012,Toyota,Sequoia,SUV,2012,7,economy,807.9,12.0,derived+simulated
+187,Toyota Camry Sedan 2012,Toyota,Camry,Sedan,2012,5,economy,533.4,7.0,derived+simulated
+188,Toyota Corolla Sedan 2012,Toyota,Corolla,Sedan,2012,5,economy,509.6,7.1,derived+simulated
+189,Toyota 4Runner SUV 2012,Toyota,4Runner,SUV,2012,7,economy,659.9,11.9,derived+simulated
+190,Volkswagen Golf Hatchback 2012,Volkswagen,Golf,Hatchback,2012,5,economy,543.5,6.3,derived+simulated
+191,Volkswagen Golf Hatchback 1991,Volkswagen,Golf,Hatchback,1991,5,economy,381.0,8.7,derived+simulated
+192,Volkswagen Beetle Hatchback 2012,Volkswagen,Beetle,Hatchback,2012,5,economy,592.5,6.9,derived+simulated
+193,Volvo C30 Hatchback 2012,Volvo,C30,Hatchback,2012,5,luxury,1277.1,6.9,derived+simulated
+194,Volvo 240 Sedan 1993,Volvo,240,Sedan,1993,5,luxury,1203.3,10.9,derived+simulated
+195,Volvo XC90 SUV 2007,Volvo,XC90,SUV,2007,7,luxury,1758.8,13.3,derived+simulated
+196,smart fortwo Convertible 2012,smart,fortwo,Convertible,2012,2,economy,810.3,10.7,derived+simulated

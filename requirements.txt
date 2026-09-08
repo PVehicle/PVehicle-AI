@@ -1,5 +1,5 @@
-# ---- Suy luan local (bat buoc de chay app) ----
 onnxruntime==1.19.2
+onnx==1.16.2
 opencv-python==4.10.0.84
 numpy==1.26.4
 pandas==2.2.3
@@ -7,6 +7,5 @@ pillow==10.4.0
 streamlit==1.39.0
 requests==2.32.3
 scikit-learn==1.5.2
-
-# ---- Huan luyen & export (chi can tren Colab/Kaggle) ----
-# Xem requirements-train.txt
+matplotlib==3.9.2
+skl2onnx==1.17.0

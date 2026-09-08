@@ -15,6 +15,7 @@ env/
 *.pt
 *.onnx
 *.pth
+models/class_names.json
 
 # Dataset (tai ve rieng, xem docs/dataset_setup.md)
 data/raw/
@@ -40,3 +41,6 @@ outputs/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Ket qua danh gia (sinh tu checkpoint, khong day len git)
+reports/
