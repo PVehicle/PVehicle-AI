@@ -35,3 +35,6 @@
 
 # Yêu cầu về Docs
 - Với mỗi features mới phải tự tạo thêm 1 file markdown thêm vào /docs.
+
+# Yêu cầu về Git
+- Mỗi khi code xong cái gì đó thì em phải tự commit giúp anh, còn lại để anh tự push và merge.
