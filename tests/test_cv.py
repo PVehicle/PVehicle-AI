@@ -212,5 +212,47 @@ class TestPipeline(unittest.TestCase):
         np.testing.assert_array_equal(image, original)
 
 
+class TestNguongTinCay(unittest.TestCase):
+    """Kiem tra co che phat hien anh khong phai o to.
+
+    Mo hinh phan loai luon tra ve mot trong 196 lop, ke ca khi anh dau vao
+    la con meo hay phong canh. Cac co suy nay giup phan biet "nhan ra xe"
+    voi "doan bua".
+    """
+
+    @staticmethod
+    def make_result(confidence, has_detection):
+        from src.cv.classifier import Prediction
+        from src.cv.pipeline import RecognitionResult
+
+        detection = (
+            Detection(0, 0, 100, 100, 0.9, "car") if has_detection else None
+        )
+        return RecognitionResult(
+            detection=detection,
+            predictions=[Prediction(0, "Xe Mau 2012", confidence)],
+            crop=make_test_image(100, 100),
+        )
+
+    def test_du_tin_cay_khi_vuot_nguong(self):
+        self.assertTrue(self.make_result(0.85, True).is_confident)
+
+    def test_khong_du_tin_cay_khi_duoi_nguong(self):
+        self.assertFalse(self.make_result(0.02, True).is_confident)
+
+    def test_canh_bao_khi_vua_khong_detect_vua_khong_chac(self):
+        """Hai dau hieu cung xuat hien moi ket luan la khong phai o to."""
+        self.assertTrue(self.make_result(0.02, False).is_likely_not_a_car)
+
+    def test_khong_canh_bao_khi_detect_duoc_xe(self):
+        """Detect duoc xe thi khong ket luan 'khong phai o to',
+        du do tin cay phan loai thap."""
+        self.assertFalse(self.make_result(0.02, True).is_likely_not_a_car)
+
+    def test_khong_canh_bao_khi_phan_loai_chac_chan(self):
+        """Anh da crop sat xe: khong detect duoc nhung phan loai chac chan."""
+        self.assertFalse(self.make_result(0.90, False).is_likely_not_a_car)
+
+
 if __name__ == "__main__":
     unittest.main()

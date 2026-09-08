@@ -176,7 +176,13 @@ def render_recognition_tab(pipeline, recommender) -> None:
         )
 
     with right:
-        if results and results[0].is_whole_image:
+        if results and results[0].is_likely_not_a_car:
+            st.error(
+                "**Nhieu kha nang anh nay khong chua o to.**\\n\\n"
+                "Khong phat hien duoc xe nao, va mo hinh phan loai cung "
+                "khong chac chan ve ket qua. Hay thu anh khac."
+            )
+        elif results and results[0].is_whole_image:
             st.warning(
                 "Khong tim thay xe trong anh — dang phan loai toan bo "
                 "buc anh. Ket qua co the khong chinh xac."
@@ -184,7 +190,11 @@ def render_recognition_tab(pipeline, recommender) -> None:
         st.metric("So xe phat hien", len(results))
 
     for index, result in enumerate(results, start=1):
-        header = f"Xe {index}: **{result.best.class_name}**"
+        if result.is_confident:
+            header = f"Xe {index}: **{result.best.class_name}**"
+        else:
+            header = f"Xe {index}: ket qua khong chac chan"
+
         with st.expander(header, expanded=(index == 1)):
             render_single_result(result, recommender)
 
@@ -197,6 +207,11 @@ def render_single_result(result, recommender) -> None:
         st.image(to_rgb(result.crop), use_container_width=True)
 
     with info_col:
+        if not result.is_confident:
+            st.warning(
+                f"Do tin cay cao nhat chi {result.best.confidence:.1%} — "
+                "duoi nguong dang tin. Ket qua duoi day chi de tham khao."
+            )
         st.write("**Cac kha nang cao nhat:**")
         for prediction in result.predictions:
             label = (

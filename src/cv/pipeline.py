@@ -26,6 +26,14 @@ CLASS_NAMES_FILE = MODELS_DIR / "class_names.json"
 # Noi rong hop bao truoc khi crop, giong luc huan luyen (xem notebook).
 CROP_PADDING = 0.08
 
+# Nguong xac suat de coi ket qua phan loai la dang tin.
+#
+# Mo hinh phan loai LUON tra ve mot trong 196 lop, ke ca khi anh dau vao
+# khong phai o to. Voi anh la (con meo, phong canh...), phan bo xac suat
+# thuong rat deu - khong lop nao noi troi han. Nguong nay giup phat hien
+# truong hop do de bao "khong nhan ra" thay vi doan bua.
+MIN_CONFIDENCE = 0.15
+
 
 @dataclass(frozen=True)
 class RecognitionResult:
@@ -44,6 +52,24 @@ class RecognitionResult:
     def is_whole_image(self) -> bool:
         """True neu phan loai ca buc anh (khong detect duoc xe nao)."""
         return self.detection is None
+
+    @property
+    def is_confident(self) -> bool:
+        """True neu ket qua du tin cay de hien thi nhu mot ket luan.
+
+        Mo hinh luon tra ve mot lop nao do, ke ca voi anh khong phai o to.
+        Kiem tra nay giup phan biet "nhan ra xe" voi "doan bua".
+        """
+        return self.best.confidence >= MIN_CONFIDENCE
+
+    @property
+    def is_likely_not_a_car(self) -> bool:
+        """True khi nhieu kha nang anh khong chua o to.
+
+        Hai dau hieu cung xuat hien: tang phat hien khong tim thay xe nao,
+        VA tang phan loai cung khong chac chan.
+        """
+        return self.is_whole_image and not self.is_confident
 
 
 class RecognitionPipeline:
