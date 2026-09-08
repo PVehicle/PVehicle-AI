@@ -89,17 +89,22 @@ PVehicle-AI/
 │   │   ├── classifier.py           # Tầng 2: phân loại
 │   │   └── pipeline.py             # Ghép hai tầng
 │   └── rec/
-│       └── recommender.py          # Module tư vấn
+│       ├── recommender.py          # Module tư vấn (bản dùng chính)
+│       └── onnx_recommender.py     # Bản ONNX, để so sánh hiệu năng
 │
 ├── scripts/
 │   ├── generate_car_specs.py       # Sinh bảng thông số xe
 │   ├── build_train_notebook.py     # Sinh notebook huấn luyện
-│   └── make_dummy_models.py        # Mô hình giả để kiểm thử
+│   ├── make_dummy_models.py        # Mô hình giả để kiểm thử
+│   ├── recognize.py                # Nhận diện từ dòng lệnh
+│   ├── benchmark_inference.py      # Đo hiệu năng suy luận
+│   ├── evaluate_model.py           # Sinh báo cáo từ checkpoint
+│   └── export_recommender_onnx.py  # Export + so sánh module tư vấn
 │
 ├── notebooks/
 │   └── train_classifier_colab.ipynb  # Huấn luyện trên Colab
 │
-├── tests/                          # 59 unit test
+├── tests/                          # 69 unit test
 └── docs/                           # Tài liệu kỹ thuật
 ```
 
@@ -165,6 +170,23 @@ Giao diện có 2 tab:
 > Tab **Tư vấn xe** chạy được ngay cả khi chưa có mô hình, vì nó chỉ cần
 > `data/car_specs.csv`.
 
+### Chạy từ dòng lệnh
+
+Không cần mở giao diện:
+
+```powershell
+# Nhận diện một ảnh, kèm gợi ý xe tương tự
+.\.venv\Scripts\python.exe scripts/recognize.py anh_xe.jpg --recommend
+
+# Xử lý cả thư mục
+.\.venv\Scripts\python.exe scripts/recognize.py thu_muc_anh/
+
+# Đo hiệu năng suy luận
+.\.venv\Scripts\python.exe scripts/benchmark_inference.py
+```
+
+Chi tiết: `docs/cli_and_benchmark.md`.
+
 ---
 
 ## 🧪 Kiểm thử
@@ -206,6 +228,8 @@ Chi tiết quy tắc sinh: `docs/car_specs_generation.md`.
 | `docs/car_specs_generation.md` | Quy tắc sinh bảng thông số xe |
 | `docs/training_classifier.md` | Quy trình huấn luyện |
 | `docs/inference_pipeline.md` | Luồng suy luận và giao diện |
+| `docs/cli_and_benchmark.md` | Công cụ dòng lệnh và đo hiệu năng |
+| `docs/onnx_vs_pandas.md` | So sánh hiệu năng hai bản tư vấn |
 
 ---
 
