@@ -31,21 +31,3 @@ Dự án được thiết kế đặc thù để tối ưu hóa hiệu suất kh
 
 ## 📂 Cấu trúc thư mục (Project Structure)
 
-```text
-PVehicle-AI/
-│
-├── data/                  # Thư mục chứa dataset (ảnh test, file csv thông số xe)
-├── models/                # Nơi lưu trữ các file mô hình (.pt, .onnx)
-│   ├── yolov8n.onnx       # Mô hình nhận diện đã được export
-│   └── recommend.onnx     # Mô hình tư vấn (tùy chọn)
-│
-├── src/                   # Thư mục chứa mã nguồn chính
-│   ├── cv_module.py       # Xử lý hình ảnh và chạy suy luận YOLOv8
-│   ├── rec_module.py      # Logic của hệ thống tư vấn
-│   └── utils.py           # Các hàm hỗ trợ (load config, xử lý format)
-│
-├── app.py                 # File chạy chính của giao diện Streamlit
-├── requirements.txt       # Danh sách các thư viện cần cài đặt
-├── .env.example           # Biến môi trường mẫu (nếu có)
-├── CLAUDE.md              # File quy chuẩn coding & prompt cho AI Assistant
-└── README.md              # Tài liệu mô tả dự án
