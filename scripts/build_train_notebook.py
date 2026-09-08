@@ -136,42 +136,61 @@ md("""
 
 Dataset goc tren trang Stanford **da bi go bo**, nen phai tai qua Kaggle.
 
-### Cach lay file `kaggle.json`
+### Cach lay API token
 
 1. Tao tai khoan tai <https://www.kaggle.com>
 2. Vao **Settings** (bam vao anh dai dien) → muc **API**
-3. Bam **Create New Token** → trinh duyet tai ve file `kaggle.json`
-4. Chay o duoi va tai file do len
+3. Bam **Create New Token**
+4. Copy chuoi token (dang `KGAT_...`) va dan vao o nhap ben duoi
 
-> **Luu y bao mat:** `kaggle.json` chua API key ca nhan. Khong commit file
-> nay len git, khong chia se cho nguoi khac.
+> **Luu y bao mat:** o nhap dung `getpass` nen token **khong hien ra man
+> hinh va khong bi luu vao file notebook**. Tuyet doi khong go thang token
+> vao o code — notebook luu ca ket qua chay, token se lo ra khi chia se.
+>
+> Kaggle chi cho xem token dung mot lan. Neu lo, vao lai Settings → API →
+> **Create New Token** de sinh token moi (token cu tu het hieu luc).
+
+Notebook ho tro ca hai co che xac thuc cua Kaggle:
+
+| Co che | Cach dung |
+| :--- | :--- |
+| **Token moi** (khuyen nghi) | Dan chuoi `KGAT_...` vao o nhap |
+| **`kaggle.json` cu** | Neu da co san file, notebook tu dung, khong hoi |
 """)
 
 code("""
-import json
 import os
+from getpass import getpass
 from pathlib import Path
 
-from google.colab import files
+KAGGLE_JSON = Path.home() / '.kaggle' / 'kaggle.json'
+ACCESS_TOKEN_FILE = Path.home() / '.kaggle' / 'access_token'
 
-KAGGLE_DIR = Path.home() / '.kaggle'
-KAGGLE_JSON = KAGGLE_DIR / 'kaggle.json'
 
-if KAGGLE_JSON.exists():
-    print('Da co kaggle.json, bo qua buoc tai len.')
-else:
-    print('Hay chon file kaggle.json vua tai tu Kaggle:')
-    uploaded = files.upload()
+def setup_kaggle_auth():
+    \"\"\"Cau hinh xac thuc Kaggle, uu tien thong tin da co san.
 
-    KAGGLE_DIR.mkdir(exist_ok=True)
-    KAGGLE_JSON.write_bytes(uploaded['kaggle.json'])
-    # Kaggle API tu choi chay neu file de quyen doc cho moi nguoi.
-    os.chmod(KAGGLE_JSON, 0o600)
-    print('Da luu', KAGGLE_JSON)
+    Thu tu kiem tra khop voi thu tu ma thu vien kaggle tu tim:
+    bien moi truong -> file access_token -> file kaggle.json cu.
+    \"\"\"
+    if os.environ.get('KAGGLE_API_TOKEN'):
+        return 'bien moi truong KAGGLE_API_TOKEN'
+    if ACCESS_TOKEN_FILE.exists():
+        return f'file {ACCESS_TOKEN_FILE}'
+    if KAGGLE_JSON.exists():
+        return f'file {KAGGLE_JSON} (co che cu)'
 
-# Kiem tra token doc duoc.
-config = json.loads(KAGGLE_JSON.read_text())
-print('Dang nhap voi tai khoan:', config['username'])
+    # getpass: token khong hien ra man hinh, khong luu vao notebook.
+    token = getpass('Dan Kaggle API token (dang KGAT_...): ').strip()
+    if not token:
+        raise ValueError('Chua nhap token. Hay chay lai o nay.')
+
+    os.environ['KAGGLE_API_TOKEN'] = token
+    return 'token vua nhap'
+
+
+source = setup_kaggle_auth()
+print('Xac thuc bang:', source)
 """)
 
 # =====================================================================
@@ -193,15 +212,25 @@ Buoc nay mat khoang 2-4 phut.
 """)
 
 code("""
-import kaggle
-
 KAGGLE_DATASET = 'rickyyyyyyy/torchvision-stanford-cars'
 STANFORD_DIR = DATA_DIR / 'stanford_cars'
 
 if STANFORD_DIR.exists():
     print('Dataset da co san, bo qua buoc tai.')
 else:
-    kaggle.api.authenticate()
+    # Import sau khi da dat KAGGLE_API_TOKEN: thu vien kaggle doc bien
+    # moi truong ngay luc import, dat sau se khong an.
+    import kaggle
+
+    try:
+        kaggle.api.authenticate()
+    except Exception as exc:
+        raise RuntimeError(
+            'Xac thuc Kaggle that bai. Kiem tra lai token con hieu luc '
+            'khong, hoac tao token moi tai Settings -> API.'
+        ) from exc
+
+    print(f'Dang tai {KAGGLE_DATASET} (~2 GB), doi vai phut...')
     kaggle.api.dataset_download_files(
         KAGGLE_DATASET, path=str(DATA_DIR), unzip=True
     )
@@ -788,6 +817,8 @@ phai co, neu khong app se khong dich duoc ket qua suy luan.
 """)
 
 code("""
+import json
+
 LABELS_PATH = DRIVE_DIR / 'class_names.json'
 LABELS_PATH.write_text(
     json.dumps(IDX_TO_NAME, ensure_ascii=False, indent=2), encoding='utf-8'
@@ -815,6 +846,8 @@ tai truc tiep tu do neu trinh duyet chan lenh tai o duoi.
 """)
 
 code("""
+from google.colab import files
+
 files.download(str(ONNX_PATH))
 files.download(str(LABELS_PATH))
 """)

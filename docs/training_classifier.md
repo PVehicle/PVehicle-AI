@@ -69,12 +69,33 @@ data/stanford_cars/
 
 1. Tạo tài khoản tại <https://www.kaggle.com>
 2. Vào **Settings** (ảnh đại diện) → mục **API**
-3. Bấm **Create New Token** → tải về `kaggle.json`
-4. Chạy ô tương ứng trong notebook và tải file này lên
+3. Bấm **Create New Token**
+4. Copy chuỗi token (dạng `KGAT_...`), dán vào ô nhập trong notebook
 
-> **Bảo mật:** `kaggle.json` chứa API key cá nhân. Không commit lên git,
-> không chia sẻ. File `.gitignore` của dự án đã chặn sẵn `.env`, nhưng
-> `kaggle.json` chỉ tồn tại trên Colab nên không có nguy cơ lọt vào repo.
+### Hai cơ chế xác thực
+
+Kaggle đã chuyển từ file `kaggle.json` sang **token dạng chuỗi**. Notebook
+hỗ trợ cả hai, tìm theo đúng thứ tự mà thư viện `kaggle` tự tìm:
+
+| Thứ tự | Nguồn | Ghi chú |
+| ---: | :--- | :--- |
+| 1 | Biến môi trường `KAGGLE_API_TOKEN` | Cơ chế mới |
+| 2 | `~/.kaggle/access_token` | Cơ chế mới, dạng file |
+| 3 | `~/.kaggle/kaggle.json` | Cơ chế cũ, vẫn dùng được |
+
+Nếu đã có sẵn một trong ba, notebook dùng luôn và không hỏi gì.
+
+### Bảo mật token
+
+Ô nhập token dùng `getpass`, nên token **không hiện ra màn hình và không bị
+lưu vào file notebook**.
+
+> **Tuyệt đối không gõ thẳng token vào ô code.** Notebook lưu cả kết quả
+> chạy, nên token sẽ lộ ra khi chia sẻ file `.ipynb` hoặc commit lên git.
+
+Kaggle chỉ cho xem token đúng một lần. Nếu lỡ để lộ (chụp màn hình, dán
+nhầm vào chat, commit lên git), vào lại **Settings → API → Create New
+Token** để sinh token mới — token cũ tự hết hiệu lực ngay.
 
 ## 5. Tiền xử lý: crop theo bounding box
 
