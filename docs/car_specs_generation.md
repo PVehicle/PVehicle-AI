@@ -91,10 +91,39 @@ tường minh:
 
 ## 4. Công thức mô phỏng (simulated)
 
+### 4.0. Biến thiên riêng cho từng dòng xe
+
+Ban đầu công thức chỉ dựa vào (phân khúc, kiểu dáng, năm). Hệ quả: **196
+xe chỉ có 87 tổ hợp đặc trưng khác nhau** — 18 xe cùng giá 750 triệu, 15 xe
+cùng giá 600 triệu. Module tư vấn vì thế trả về nhiều xe cùng điểm 1.000,
+trông như xếp hạng tùy tiện.
+
+Hàm `model_variation` sinh độ lệch riêng cho từng dòng xe:
+
+```python
+digest = hashlib.md5(class_name.encode("utf-8")).hexdigest()
+unit = int(digest[:6], 16) / 0xFFFFFF * 2 - 1   # đưa về [-1, 1]
+return 1 + unit * spread
+```
+
+Dùng **hash md5 của tên xe** nên kết quả **luôn tái lập được** — chạy lại
+bao nhiêu lần cũng ra đúng con số đó, khác hẳn số ngẫu nhiên.
+
+> Không dùng `hash()` có sẵn của Python: hàm đó thay đổi giữa các lần chạy
+> do PYTHONHASHSEED, nên dữ liệu sẽ khác nhau mỗi lần sinh lại.
+
+| Trường | Biên độ lệch |
+| :--- | ---: |
+| Giá bán | ±18% |
+| Mức tiêu hao | ±10% |
+
+Sau khi áp dụng: **196/196 tổ hợp riêng biệt**.
+
 ### 4.1. Giá bán (triệu VND)
 
-```
-giá = giá_cơ_sở(phân_khúc) × hệ_số(kiểu_dáng) × (1 − 0.02)^(2012 − năm)
+```text
+giá = cơ_sở(phân_khúc) × hệ_số(kiểu_dáng)
+      × (1 − 0.02)^(2012 − năm) × biến_thiên
 ```
 
 | Phân khúc | Giá cơ sở |
@@ -110,8 +139,9 @@ Xe càng cũ càng khấu hao: giảm 2%/năm so với mốc 2012.
 
 ### 4.2. Mức tiêu hao (L/100km)
 
-```
-tiêu_hao = cơ_sở(kiểu_dáng) × hệ_số(phân_khúc) × (1 + 0.015)^(2012 − năm)
+```text
+tiêu_hao = cơ_sở(kiểu_dáng) × hệ_số(phân_khúc)
+           × (1 + 0.015)^(2012 − năm) × biến_thiên
 ```
 
 Cơ sở theo kiểu dáng: Hatchback 6.5 · Sedan 7.5 · Wagon 8.0 · Coupe 9.5 ·
@@ -144,6 +174,7 @@ Xe đời cũ tốn nhiên liệu hơn: tăng 1.5%/năm so với mốc 2012.
 - **Phân khúc:** economy 107 · luxury 58 · exotic 31
 - **Kiểu dáng:** Sedan 50 · SUV 35 · Coupe 33 · Convertible 26 · Pickup 18 ·
   Hatchback 14 · Wagon 8 · Van 6 · Minivan 6
+- **Tổ hợp đặc trưng riêng biệt:** 196/196 (nhờ hàm `model_variation`)
 
 ## 6. Cách chạy
 

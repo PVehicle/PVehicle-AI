@@ -98,6 +98,9 @@ DRIVE_DIR = Path('/content/drive/MyDrive/PVehicle-AI')
 CKPT_DIR = DRIVE_DIR / 'checkpoints'
 CKPT_DIR.mkdir(parents=True, exist_ok=True)
 
+# Kich thuoc dau vao cua YOLOv8, phai khop src/cv/detector.py.
+YOLO_INPUT_SIZE_EXPORT = 640
+
 # Thu muc du lieu, nam tren o dia tam cua Colab (nhanh hon Drive rat nhieu).
 DATA_DIR = Path('/content/data')
 CROP_DIR = Path('/content/cropped')
@@ -810,7 +813,67 @@ print('ONNX cho ket qua trung khop voi PyTorch.')
 # 16. Luu nhan
 # =====================================================================
 md("""
-## 15. Luu danh sach nhan
+## 15. Export mo hinh phat hien YOLOv8
+
+Tang 1 dung YOLOv8 pretrained COCO, **khong can huan luyen**. Nhung van
+phai export sang ONNX de chay duoc tren may local ma khong can cai
+`ultralytics` va `torch` (~2,5 GB).
+
+Export ngay tai day vi Colab da co san torch. Chi mat vai chuc giay.
+""")
+
+code("""
+!pip install -q ultralytics==8.3.0
+
+from ultralytics import YOLO
+
+YOLO_ONNX = DRIVE_DIR / 'yolov8n.onnx'
+
+if YOLO_ONNX.exists():
+    print('Da co san yolov8n.onnx, bo qua.')
+else:
+    detector = YOLO('yolov8n.pt')  # tu tai trong so pretrained COCO
+    exported = detector.export(
+        format='onnx',
+        imgsz=YOLO_INPUT_SIZE_EXPORT,
+        opset=17,
+        simplify=True,
+        # Khong nhung NMS: code local tu xu ly (src/cv/detector.py).
+        nms=False,
+    )
+    Path(exported).replace(YOLO_ONNX)
+    print('Da export:', YOLO_ONNX)
+
+print(f'Kich thuoc: {YOLO_ONNX.stat().st_size / 1e6:.1f} MB')
+""")
+
+md("""
+### Kiem tra dinh dang dau ra cua YOLOv8
+
+Code suy luan local phu thuoc vao dang `[1, 84, 8400]`. Kiem tra ngay de
+tranh phat hien sai lech luc chay app.
+""")
+
+code("""
+yolo_session = ort.InferenceSession(
+    str(YOLO_ONNX), providers=['CPUExecutionProvider']
+)
+yolo_input = yolo_session.get_inputs()[0]
+yolo_output = yolo_session.get_outputs()[0]
+
+print('Dau vao :', yolo_input.name, yolo_input.shape)
+print('Dau ra  :', yolo_output.name, yolo_output.shape)
+
+expected = [1, 84, 8400]
+assert list(yolo_output.shape) == expected, (
+    f'Dang dau ra {yolo_output.shape} khac ky vong {expected}. '
+    'Phai cap nhat lai src/cv/detector.py cho khop.'
+)
+print('Dinh dang dau ra dung nhu code local mong doi.')
+""")
+
+md("""
+## 16. Luu danh sach nhan
 
 File nay cho biet chi so dau ra cua mo hinh ung voi ten xe nao. Bat buoc
 phai co, neu khong app se khong dich duoc ket qua suy luan.
@@ -832,36 +895,39 @@ print('3 nhan dau:', IDX_TO_NAME[:3])
 # 17. Tai ve
 # =====================================================================
 md("""
-## 16. Tai ket qua ve may
+## 17. Tai ket qua ve may
 
-Chep hai file duoi vao thu muc `models/` cua du an:
+Chep **ca ba file** duoi vao thu muc `models/` cua du an:
 
-| File | Dat vao |
-| :--- | :--- |
-| `car_classifier.onnx` | `models/car_classifier.onnx` |
-| `class_names.json` | `models/class_names.json` |
+| File | Dat vao | Vai tro |
+| :--- | :--- | :--- |
+| `yolov8n.onnx` | `models/yolov8n.onnx` | Tang 1: phat hien xe |
+| `car_classifier.onnx` | `models/car_classifier.onnx` | Tang 2: phan loai |
+| `class_names.json` | `models/class_names.json` | 196 nhan |
 
-Ca hai deu da nam san trong Google Drive (`MyDrive/PVehicle-AI/`), co the
+Ca ba deu da nam san trong Google Drive (`MyDrive/PVehicle-AI/`), co the
 tai truc tiep tu do neu trinh duyet chan lenh tai o duoi.
 """)
 
 code("""
 from google.colab import files
 
-files.download(str(ONNX_PATH))
-files.download(str(LABELS_PATH))
+for path in (YOLO_ONNX, ONNX_PATH, LABELS_PATH):
+    files.download(str(path))
 """)
 
 md("""
 ## Buoc tiep theo
 
-Sau khi da co hai file trong `models/`:
+Sau khi da chep ba file vao `models/`, chay ung dung tren may local:
 
-1. Xay dung pipeline suy luan local (YOLOv8 detect → crop → ONNX phan loai)
-2. Ghep voi module tu van qua cot `class_name` trong `data/car_specs.csv`
-3. Dung giao dien Streamlit
+```powershell
+.\\.venv\\Scripts\\streamlit.exe run app.py
+```
 
-Chi tiet quy trinh huan luyen ghi trong `docs/training_classifier.md`.
+Chi tiet:
+- Quy trinh huan luyen: `docs/training_classifier.md`
+- Luong suy luan local: `docs/inference_pipeline.md`
 """)
 
 

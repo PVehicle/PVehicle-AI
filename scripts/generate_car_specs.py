@@ -18,6 +18,7 @@ Cach chay:
 
 import argparse
 import csv
+import hashlib
 import sys
 from pathlib import Path
 
@@ -183,6 +184,10 @@ REFERENCE_YEAR = 2012
 FUEL_IMPROVEMENT_PER_YEAR = 0.015  # 1.5%/nam
 PRICE_DEPRECIATION_PER_YEAR = 0.02  # 2%/nam so voi moc 2012
 
+# Bien thien rieng cho tung dong xe, xem ham `model_variation`.
+PRICE_VARIATION_SPREAD = 0.18  # gia lech toi da +/-18%
+FUEL_VARIATION_SPREAD = 0.10  # muc tieu hao lech toi da +/-10%
+
 CSV_FIELDNAMES = [
     "class_id",
     "class_name",
@@ -268,19 +273,42 @@ def resolve_segment(class_name: str, brand: str) -> str:
     return "economy"
 
 
-def estimate_price(segment: str, body_style: str, year: int) -> float:
+def model_variation(class_name: str, spread: float) -> float:
+    """Sinh he so bien thien rieng cho tung dong xe.
+
+    Neu chi dua vao (phan khuc, kieu dang, nam) thi rat nhieu xe se co gia
+    y het nhau — 196 xe chi con 87 to hop khac nhau, khien ket qua tu van
+    trong nhu xep hang tuy tien.
+
+    Ham nay tao do lech rieng cho tung ten xe, nam trong khoang
+    [1 - spread, 1 + spread]. Dung hash cua ten xe nen ket qua **luon tai
+    lap duoc**, khong phai so ngau nhien.
+    """
+    # md5 cho gia tri on dinh giua cac lan chay, khac voi hash() cua Python.
+    digest = hashlib.md5(class_name.encode("utf-8")).hexdigest()
+    # Lay 6 chu so hex dau -> so nguyen -> dua ve khoang [-1, 1].
+    unit = int(digest[:6], 16) / 0xFFFFFF * 2 - 1
+    return 1 + unit * spread
+
+
+def estimate_price(
+    class_name: str, segment: str, body_style: str, year: int
+) -> float:
     """Uoc luong gia ban (trieu VND) - DU LIEU MO PHONG.
 
-    gia = gia_co_so(phan_khuc) * he_so(kieu_dang) * khau_hao(nam)
+    gia = co_so(phan_khuc) * he_so(kieu_dang) * khau_hao(nam) * bien_thien
     """
     base = BASE_PRICE_BY_SEGMENT[segment]
     factor = PRICE_FACTOR_BY_BODY[body_style]
     age = max(REFERENCE_YEAR - year, 0)
     depreciation = (1 - PRICE_DEPRECIATION_PER_YEAR) ** age
-    return round(base * factor * depreciation, 1)
+    variation = model_variation(class_name, PRICE_VARIATION_SPREAD)
+    return round(base * factor * depreciation * variation, 1)
 
 
-def estimate_fuel(segment: str, body_style: str, year: int) -> float:
+def estimate_fuel(
+    class_name: str, segment: str, body_style: str, year: int
+) -> float:
     """Uoc luong muc tieu hao (L/100km) - DU LIEU MO PHONG.
 
     Xe cang cu cang ton nhien lieu so voi moc quy chieu 2012.
@@ -289,7 +317,8 @@ def estimate_fuel(segment: str, body_style: str, year: int) -> float:
     factor = FUEL_FACTOR_BY_SEGMENT[segment]
     age = max(REFERENCE_YEAR - year, 0)
     penalty = (1 + FUEL_IMPROVEMENT_PER_YEAR) ** age
-    return round(base * factor * penalty, 1)
+    variation = model_variation(class_name + "fuel", FUEL_VARIATION_SPREAD)
+    return round(base * factor * penalty * variation, 1)
 
 
 def build_spec_row(class_id: int, class_name: str) -> dict:
@@ -309,8 +338,12 @@ def build_spec_row(class_id: int, class_name: str) -> dict:
         "year": year,
         "seats": seats,
         "segment": segment,
-        "price_million_vnd": estimate_price(segment, body_style, year),
-        "fuel_l_per_100km": estimate_fuel(segment, body_style, year),
+        "price_million_vnd": estimate_price(
+            class_name, segment, body_style, year
+        ),
+        "fuel_l_per_100km": estimate_fuel(
+            class_name, segment, body_style, year
+        ),
         # Cac truong suy tu ten lop la chinh xac, rieng price/fuel mo phong.
         "data_source": "derived+simulated",
     }

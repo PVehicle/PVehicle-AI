@@ -15,6 +15,7 @@ env/
 *.pt
 *.onnx
 *.pth
+models/class_names.json
 
 # Dataset (tai ve rieng, xem docs/dataset_setup.md)
 data/raw/
