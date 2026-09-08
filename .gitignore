@@ -1,0 +1,42 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Model weights (dung luong lon, khong day len git)
+*.pt
+*.onnx
+*.pth
+
+# Dataset (tai ve rieng, xem docs/dataset_setup.md)
+data/raw/
+data/processed/*
+!data/processed/.gitkeep
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs & outputs
+logs/
+*.log
+outputs/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store

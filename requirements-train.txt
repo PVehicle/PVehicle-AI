@@ -1,0 +1,11 @@
+# Chi cai tren moi truong huan luyen (Colab/Kaggle - co GPU).
+# KHONG can cai tren may local neu chi chay suy luan.
+-r requirements.txt
+
+torch==2.4.1
+torchvision==0.19.1
+ultralytics==8.3.0
+skl2onnx==1.17.0
+onnx==1.16.2
+matplotlib==3.9.2
+tqdm==4.66.5
