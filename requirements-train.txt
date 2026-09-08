@@ -1,5 +1,3 @@
-# Chi cai tren moi truong huan luyen (Colab/Kaggle - co GPU).
-# KHONG can cai tren may local neu chi chay suy luan.
 -r requirements.txt
 
 torch==2.4.1
