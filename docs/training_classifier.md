@@ -97,6 +97,36 @@ Kaggle chỉ cho xem token đúng một lần. Nếu lỡ để lộ (chụp mà
 nhầm vào chat, commit lên git), vào lại **Settings → API → Create New
 Token** để sinh token mới — token cũ tự hết hiệu lực ngay.
 
+## 4b. Không ghim phiên bản thư viện trên Colab
+
+Ô cài thư viện của notebook dùng `!pip install -q onnx onnxruntime kaggle`
+— **không ghim số phiên bản**.
+
+Lý do: Colab nâng cấp Python theo thời gian. Ghim cứng sẽ thất bại khi
+phiên bản đó không còn phát hành cho Python mới:
+
+```text
+ERROR: Could not find a version that satisfies the requirement
+onnxruntime==1.19.2 (from versions: 1.20.0, 1.20.1, ..., 1.24.1)
+```
+
+Đây là lỗi thật đã gặp: Colab chuyển sang Python 3.13, mà `onnxruntime`
+không phát hành bản 1.19.2 cho phiên bản này (thấp nhất là 1.20.0).
+
+### Khác phiên bản giữa Colab và máy local có sao không?
+
+Không. Mô hình được export với `opset_version=17` — định dạng ổn định mà
+mọi bản `onnxruntime` từ 1.16 trở lên đều đọc được.
+
+Nếu máy local vẫn báo lỗi không đọc được file ONNX, nâng cấp là xong:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install --upgrade onnxruntime
+```
+
+> Ngược lại, `requirements.txt` của máy local **vẫn ghim phiên bản** —
+> ở đó môi trường do mình kiểm soát nên ghim giúp tái lập chính xác.
+
 ## 5. Tiền xử lý: crop theo bounding box
 
 Tầng phân loại chỉ cần vùng chứa xe. Ảnh được crop **một lần** rồi lưu ra
