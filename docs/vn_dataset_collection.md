@@ -155,7 +155,73 @@ Mở <http://localhost:8600>. Giao diện hiện lưới ảnh của từng lớ
 
 ### Bước 3 — Chuẩn bị dataset
 
-*(chưa triển khai — sẽ gộp với Stanford Cars và chia train/test)*
+```powershell
+# Xem thống kê trước, chưa chép file
+.\.venv\Scripts\python.exe scripts/prepare_vn_dataset.py --dry-run
+
+# Chia train/test và ghi cấu hình
+.\.venv\Scripts\python.exe scripts/prepare_vn_dataset.py
+```
+
+Script chia ảnh thành `data/processed/vn_cars/{train,test}/` và ghi
+`data/vn_dataset_config.json` chứa số liệu, trọng số lớp và thông số xe.
+
+#### Cách chia train/test
+
+Lấy ảnh test theo **bước đều** chứ không cắt một đoạn liên tục.
+
+Lý do: ảnh Wikimedia thường sắp theo tên, và các ảnh liên tiếp hay là
+**cùng một chiếc xe chụp cùng một buổi** (`VF 8 DSC 8470.jpg`,
+`VF 8 DSC 8474.jpg`...). Cắt liên tục sẽ khiến tập test toàn xe lạ hoặc
+toàn xe đã thấy — cả hai đều làm kết quả đánh giá sai lệch.
+
+## 5b. Xử lý mất cân bằng lớp
+
+Đây là vấn đề **nghiêm trọng nhất** của tập dữ liệu này.
+
+| Lớp | Ảnh |
+| :--- | ---: |
+| Toyota Vios | 206 |
+| Toyota Corolla Cross | 201 |
+| VinFast VF 8 | 85 |
+| VinFast Lux SA2.0 | 17 |
+| VinFast Fadil | **14** |
+
+Chênh lệch **14.7 lần** giữa lớp nhiều nhất và ít nhất.
+
+### Hậu quả nếu không xử lý
+
+Mô hình học được rằng "đoán Fadil gần như luôn sai" nên nó **tránh dự đoán
+lớp đó**. Kết quả: độ chính xác tổng thể vẫn cao (vì các lớp lớn đúng
+nhiều), nhưng Fadil có độ chính xác gần **0%**.
+
+Đây là lỗi khó phát hiện nếu chỉ nhìn con số top-1 tổng thể.
+
+### Ba kỹ thuật áp dụng
+
+**1. Trọng số lớp trong hàm mất mát.** Lớp ít ảnh được nhân trọng số cao
+hơn, buộc mô hình chú ý:
+
+```text
+trọng_số = 100 / số_ảnh_của_lớp     (giới hạn trong [1, 8])
+```
+
+Ví dụ: Fadil (14 ảnh) → trọng số **7.14**; Toyota Vios (206 ảnh) → **1.00**.
+
+**2. Lấy mẫu cân bằng.** Mỗi epoch, ảnh của lớp ít được lấy nhiều lần hơn
+để các lớp xuất hiện đều nhau.
+
+**3. Tăng cường dữ liệu mạnh hơn cho lớp ít.** Lớp 14 ảnh cần biến đổi
+nhiều hơn lớp 200 ảnh để tránh học vẹt.
+
+Trọng số được tính sẵn trong `vn_dataset_config.json`, notebook huấn luyện
+đọc trực tiếp từ đó.
+
+### Vẫn còn hạn chế
+
+Các kỹ thuật trên **giảm nhẹ** chứ không xóa bỏ được vấn đề. Lớp 14 ảnh vẫn
+sẽ kém chính xác hơn lớp 200 ảnh. Khi báo cáo cần nêu độ chính xác **theo
+từng lớp**, không chỉ con số tổng thể.
 
 ## 6. Ghi công nguồn ảnh
 
