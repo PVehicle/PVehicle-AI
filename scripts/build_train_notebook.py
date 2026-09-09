@@ -871,6 +871,8 @@ Export ngay tai day vi Colab da co san torch. Chi mat vai chuc giay.
 code("""
 !pip install -q ultralytics
 
+import shutil
+
 from ultralytics import YOLO
 
 YOLO_ONNX = DRIVE_DIR / 'yolov8n.onnx'
@@ -887,7 +889,10 @@ else:
         # Khong nhung NMS: code local tu xu ly (src/cv/detector.py).
         nms=False,
     )
-    Path(exported).replace(YOLO_ONNX)
+    # Dung copy2 chu KHONG dung Path.replace(): file nguon nam o o dia
+    # cua Colab, con Drive duoc gan qua FUSE — la thiet bi khac. Doi ten
+    # qua hai thiet bi se loi "Invalid cross-device link".
+    shutil.copy2(exported, YOLO_ONNX)
     print('Da export:', YOLO_ONNX)
 
 print(f'Kich thuoc: {YOLO_ONNX.stat().st_size / 1e6:.1f} MB')
