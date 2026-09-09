@@ -632,7 +632,120 @@
       "segment": "economy",
       "price_million_vnd": 538,
       "fuel_l_per_100km": 6.5
+    },
+    {
+      "class_name": "VinFast VF 3 SUV 2024",
+      "search": [
+        "VinFast VF 3"
+      ],
+      "brand": "VinFast",
+      "model": "VF 3",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 4,
+      "segment": "economy",
+      "price_million_vnd": 240,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF 6 SUV 2024",
+      "search": [
+        "VinFast VF 6"
+      ],
+      "brand": "VinFast",
+      "model": "VF 6",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 675,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF 7 SUV 2024",
+      "search": [
+        "VinFast VF 7"
+      ],
+      "brand": "VinFast",
+      "model": "VF 7",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 850,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF 9 SUV 2023",
+      "search": [
+        "VinFast VF 9"
+      ],
+      "brand": "VinFast",
+      "model": "VF 9",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1499,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF e34 SUV 2022",
+      "search": [
+        "VinFast VF e34"
+      ],
+      "brand": "VinFast",
+      "model": "VF e34",
+      "body_style": "SUV",
+      "year": 2022,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 710,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast Fadil Hatchback 2021",
+      "search": [
+        "VinFast Fadil"
+      ],
+      "brand": "VinFast",
+      "model": "Fadil",
+      "body_style": "Hatchback",
+      "year": 2021,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 425,
+      "fuel_l_per_100km": 6.0
+    },
+    {
+      "class_name": "VinFast Lux A2.0 Sedan 2021",
+      "search": [
+        "VinFast Lux A2.0"
+      ],
+      "brand": "VinFast",
+      "model": "Lux A2.0",
+      "body_style": "Sedan",
+      "year": 2021,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 1099,
+      "fuel_l_per_100km": 8.1
+    },
+    {
+      "class_name": "VinFast Lux SA2.0 SUV 2021",
+      "search": [
+        "VinFast Lux SA2.0"
+      ],
+      "brand": "VinFast",
+      "model": "Lux SA2.0",
+      "body_style": "SUV",
+      "year": 2021,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1299,
+      "fuel_l_per_100km": 9.8
     }
   ],
-  "_luu_y_tu_khoa": "Ten file tren Wikimedia hiem khi chua nam hoac ma the he. Tu khoa chi nen gom hang + dong xe. Bo loc yeu cau MOI tu trong tu khoa phai xuat hien trong ten file, nen them nam se loai bo gan het anh hop le."
+  "_luu_y_tu_khoa": "Ten file tren Wikimedia hiem khi chua nam hoac ma the he. Tu khoa chi nen gom hang + dong xe. Bo loc yeu cau MOI tu trong tu khoa phai xuat hien trong ten file, nen them nam se loai bo gan het anh hop le.",
+  "_luu_y_vinfast": "VinFast la hang moi, rat it anh tren Wikimedia. So anh THUC TE tai duoc (do ngay 09/09/2026): VF 8=85, VF e34=44, VF 5=32, Lux A2.0=28, VF 3=26, VF 9=23, VF 7=23, VF 6=21, Fadil=10. Sau khi duyet nen loai cac lop duoi 40 anh khoi tap huan luyen — qua it se lam mo hinh hoc khong on dinh va keo tut do chinh xac cua ca tap."
 }

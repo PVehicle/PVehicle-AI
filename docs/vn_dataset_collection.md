@@ -73,9 +73,42 @@ Sau khi tăng lên 1.2-3 giây kèm cơ chế thử lại, kết quả mới đ�
 > Đây là loại lỗi nguy hiểm: không có thông báo lỗi, chỉ có dữ liệu sai.
 > Luôn kiểm tra lại bằng vài trường hợp mình biết chắc câu trả lời.
 
+## 3b. VinFast — trường hợp đặc biệt
+
+VinFast là hãng mới, ảnh trên Wikimedia rất ít. Số liệu đo ngày
+09/09/2026, **sau khi lọc theo tên file**:
+
+Số ảnh **thực tế tải được** (đã lọc theo tên file):
+
+| Dòng xe | Kết quả tìm | Ảnh tải được | Đánh giá |
+| :--- | ---: | ---: | :--- |
+| VinFast VF 8 | 127 | **85** | Đủ dùng |
+| VinFast VF e34 | 67 | 44 | Tạm được |
+| VinFast VF 5 | 101 | 32 | Thiếu |
+| VinFast Lux A2.0 | 64 | 28 | Thiếu |
+| VinFast VF 3 | 71 | 26 | Thiếu |
+| VinFast VF 9 | 51 | 23 | Thiếu |
+| VinFast VF 7 | 53 | 23 | Thiếu |
+| VinFast VF 6 | 43 | 21 | Thiếu |
+| VinFast Fadil | 23 | 10 | Quá ít |
+
+Chỉ **VF 8** đủ ảnh, VF e34 tạm được. Các dòng còn lại 10-32 ảnh — quá ít
+để huấn luyện ổn định.
+
+Giấy phép của 85 ảnh VF 8: CC BY-SA 4.0 (57), CC BY-SA 3.0 (21), CC BY 4.0
+(3), CC0 (2), CC BY 2.0 (2) — **tất cả đều là giấy phép tự do**.
+
+> **Khuyến nghị:** sau khi duyệt, loại các lớp còn **dưới 40 ảnh** khỏi tập
+> huấn luyện. Lớp quá ít ảnh làm mô hình học không ổn định và kéo tụt độ
+> chính xác của cả tập.
+
+Danh mục vẫn giữ đủ 10 dòng VinFast để anh tự quyết sau khi thấy số liệu
+thật. Nếu muốn giữ tất cả, cần bổ sung ảnh từ nguồn khác (chụp thực tế,
+hoặc xin phép dùng ảnh từ trang chủ VinFast).
+
 ## 4. Danh mục xe
 
-`data/vn_car_classes.json` — **42 dòng xe** thuộc 13 hãng, kèm thông số:
+`data/vn_car_classes.json` — **50 dòng xe** thuộc 14 hãng, kèm thông số:
 
 | Trường | Nội dung |
 | :--- | :--- |
