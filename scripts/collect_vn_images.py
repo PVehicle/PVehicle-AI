@@ -45,9 +45,22 @@ OUTPUT_DIR = RAW_DATA_DIR / "vn_cars"
 COMMONS_API = "https://commons.wikimedia.org/w/api.php"
 USER_AGENT = "PVehicleAI/1.0 (educational project; ONNX car recognition)"
 
-# Wikimedia chan neu goi qua nhanh. Cac gia tri nay da thu nghiem on dinh.
-REQUEST_DELAY = 1.5
-MAX_RETRIES = 4
+# Wikimedia chan neu goi qua nhanh (tra ve HTTP 429).
+#
+# Delay khoi diem 2.5s; neu van bi chan, script TU DONG tang len cho ca
+# phien (toi da MAX_DELAY) thay vi chi cho lau hon o lan thu lai do.
+REQUEST_DELAY = 2.5
+MAX_DELAY = 12.0
+MAX_RETRIES = 5
+
+# Thoi gian cho co ban khi bi chan, nhan len theo so lan thu lai.
+RATE_LIMIT_WAIT = 30
+
+# Cho giua cac lan tai anh (nhe hon goi API vi tai anh it ton tai nguyen).
+DOWNLOAD_DELAY = 0.4
+
+# Delay hien tai, tu dieu chinh trong qua trinh chay.
+_current_delay = REQUEST_DELAY
 
 DEFAULT_LIMIT = 200
 THUMB_WIDTH = 800
@@ -57,7 +70,14 @@ MIN_FILE_BYTES = 15_000
 
 
 def api_request(params: dict) -> dict:
-    """Goi API Wikimedia, thu lai voi thoi gian cho tang dan."""
+    """Goi API Wikimedia, thu lai voi thoi gian cho tang dan.
+
+    Xu ly rieng ma 429 (Too Many Requests): Wikimedia chan kha lau khi bi
+    goi don dap, cho vai giay la khong du. Phai cho hang chuc giay va ton
+    trong header Retry-After neu may chu gui ve.
+    """
+    global _current_delay
+
     query = urllib.parse.urlencode({**params, "format": "json"})
     url = f"{COMMONS_API}?{query}"
 
@@ -71,11 +91,31 @@ def api_request(params: dict) -> dict:
             if "error" in data:
                 raise ValueError(data["error"].get("info", "loi API"))
             return data
+
+        except urllib.error.HTTPError as exc:
+            if exc.code != 429:
+                raise
+            # Bi chan: tang delay chung cho ca phien, khong chi lan nay.
+            _current_delay = min(_current_delay * 1.5, MAX_DELAY)
+            wait = int(exc.headers.get("Retry-After") or 0)
+            wait = max(wait, RATE_LIMIT_WAIT * (attempt + 1))
+            logger.warning(
+                "  Bi gioi han toc do, cho %ds (delay moi: %.1fs)",
+                wait, _current_delay,
+            )
+            time.sleep(wait)
+
         except (urllib.error.URLError, ValueError, json.JSONDecodeError):
             if attempt == MAX_RETRIES - 1:
                 raise
             time.sleep(2 ** attempt)
-    return {}
+
+    raise RuntimeError("Van bi chan sau nhieu lan thu lai.")
+
+
+def polite_sleep() -> None:
+    """Cho giua cac lan goi API, theo delay hien tai cua phien."""
+    time.sleep(_current_delay)
 
 
 def search_images(keyword: str, limit: int) -> list[str]:
@@ -94,7 +134,7 @@ def search_images(keyword: str, limit: int) -> list[str]:
             break
         titles.extend(hit["title"] for hit in hits)
         offset += len(hits)
-        time.sleep(REQUEST_DELAY)
+        polite_sleep()
 
         if "continue" not in data:
             break
@@ -150,7 +190,7 @@ def fetch_image_info(titles: list[str]) -> list[dict]:
                 ).strip()[:100],
                 "descriptionurl": info[0].get("descriptionurl", ""),
             })
-        time.sleep(REQUEST_DELAY)
+        polite_sleep()
 
     return results
 
@@ -167,25 +207,40 @@ def safe_filename(title: str) -> str:
 
 
 def download_image(item: dict, out_dir: Path) -> bool:
-    """Tai mot anh. Tra False neu that bai hoac anh qua nho."""
+    """Tai mot anh. Tra False neu that bai hoac anh qua nho.
+
+    Buoc tai anh cung bi gioi han toc do nhu API, nen cung phai xu ly 429.
+    """
     out_path = out_dir / safe_filename(item["title"])
     if out_path.exists():
         return True
 
-    try:
-        request = urllib.request.Request(
-            item["url"], headers={"User-Agent": USER_AGENT}
-        )
-        with urllib.request.urlopen(request, timeout=60) as response:
-            content = response.read()
-    except (urllib.error.URLError, TimeoutError) as exc:
-        logger.debug("Khong tai duoc %s: %s", item["title"], exc)
+    for attempt in range(3):
+        try:
+            request = urllib.request.Request(
+                item["url"], headers={"User-Agent": USER_AGENT}
+            )
+            with urllib.request.urlopen(request, timeout=60) as response:
+                content = response.read()
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code != 429:
+                logger.debug("Khong tai duoc %s: %s", item["title"], exc)
+                return False
+            wait = int(exc.headers.get("Retry-After") or 0)
+            time.sleep(max(wait, RATE_LIMIT_WAIT))
+        except (urllib.error.URLError, TimeoutError) as exc:
+            logger.debug("Khong tai duoc %s: %s", item["title"], exc)
+            return False
+    else:
         return False
 
     if len(content) < MIN_FILE_BYTES:
         return False
 
     out_path.write_bytes(content)
+    # Cho nhe giua cac lan tai de khong bi chan.
+    time.sleep(DOWNLOAD_DELAY)
     return True
 
 
@@ -197,15 +252,20 @@ def collect_one_class(car: dict, exclude: list[str], limit: int) -> dict:
     found: dict[str, dict] = {}
 
     for keyword in car["search"]:
-        titles = search_images(keyword, limit * 3)
-        relevant = [t for t in titles if is_relevant(t, keyword, exclude)]
-        logger.info(
-            "  %-28s tim %3d -> hop le %3d", keyword, len(titles),
-            len(relevant),
-        )
-
-        for item in fetch_image_info(relevant):
-            found.setdefault(item["title"], item)
+        # Loi o mot tu khoa khong nen lam mat ket qua cua tu khoa khac.
+        try:
+            titles = search_images(keyword, limit * 3)
+            relevant = [
+                t for t in titles if is_relevant(t, keyword, exclude)
+            ]
+            logger.info(
+                "  %-28s tim %3d -> hop le %3d", keyword, len(titles),
+                len(relevant),
+            )
+            for item in fetch_image_info(relevant):
+                found.setdefault(item["title"], item)
+        except (urllib.error.URLError, ValueError, RuntimeError) as exc:
+            logger.warning("  %-28s that bai: %s", keyword, exc)
 
         if len(found) >= limit:
             break
