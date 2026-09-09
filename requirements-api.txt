@@ -1,0 +1,11 @@
+# Thu vien cho REST API. Bao gom ca requirements.txt de chay suy luan.
+-r requirements.txt
+
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic-settings==2.7.1
+slowapi==0.1.9
+
+# httpx: TestClient cua Starlette can de chay test API.
+httpx==0.28.1

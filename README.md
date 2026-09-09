@@ -9,6 +9,20 @@ CPU** — không cần GPU, không cần cài PyTorch.
 
 ---
 
+## 📈 Kết quả
+
+| Chỉ số | Kết quả |
+| :--- | ---: |
+| Độ chính xác **top-1** | **83.02%** |
+| Độ chính xác **top-5** | **95.26%** |
+| Tốc độ suy luận (CPU) | 135 ms/ảnh — 7.4 ảnh/giây |
+| Kiểm thử tự động | 91/91 pass |
+
+Mô hình: EfficientNet-B0, 196 lớp, 19 epoch trên Google Colab (GPU T4).
+Chi tiết: `docs/ket_qua_danh_gia.md`.
+
+---
+
 ## 🌟 Tính năng chính
 
 - **🔍 Nhận diện dòng xe** — kiến trúc 2 tầng: YOLOv8 khoanh vùng xe trong
@@ -58,6 +72,7 @@ CPU** — không cần GPU, không cần cài PyTorch.
 | Học máy | PyTorch (chỉ khi huấn luyện), Scikit-learn, Pandas |
 | Tối ưu & triển khai | ONNX, ONNX Runtime |
 | Giao diện | Streamlit |
+| REST API | FastAPI, Uvicorn, Docker |
 
 > ⚠️ **Bắt buộc Python 3.11.** `onnxruntime`, `torch` và `opencv-python`
 > chưa có wheel cho Python 3.13+. Chi tiết: `docs/environment_setup.md`.
@@ -88,9 +103,16 @@ PVehicle-AI/
 │   │   ├── detector.py             # Tầng 1: YOLOv8
 │   │   ├── classifier.py           # Tầng 2: phân loại
 │   │   └── pipeline.py             # Ghép hai tầng
-│   └── rec/
-│       ├── recommender.py          # Module tư vấn (bản dùng chính)
-│       └── onnx_recommender.py     # Bản ONNX, để so sánh hiệu năng
+│   ├── rec/
+│   │   ├── recommender.py          # Module tư vấn (bản dùng chính)
+│   │   └── onnx_recommender.py     # Bản ONNX, để so sánh hiệu năng
+│   └── api/                        # REST API (FastAPI)
+│       ├── main.py                 # Khởi tạo app, middleware
+│       ├── config.py               # Cấu hình qua biến môi trường
+│       ├── schemas.py              # Kiểu dữ liệu request/response
+│       ├── dependencies.py         # Quản lý vòng đời mô hình
+│       ├── security.py             # Xác thực API key
+│       └── routers/                # Các nhóm endpoint
 │
 ├── scripts/
 │   ├── generate_car_specs.py       # Sinh bảng thông số xe
@@ -104,7 +126,7 @@ PVehicle-AI/
 ├── notebooks/
 │   └── train_classifier_colab.ipynb  # Huấn luyện trên Colab
 │
-├── tests/                          # 69 unit test
+├── tests/                          # 91 unit test
 └── docs/                           # Tài liệu kỹ thuật
 ```
 
@@ -187,6 +209,26 @@ Không cần mở giao diện:
 
 Chi tiết: `docs/cli_and_benchmark.md`.
 
+### Chạy REST API
+
+Phục vụ ứng dụng khác (mobile, web, hệ thống bên thứ ba):
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-api.txt
+.\.venv\Scripts\python.exe -m uvicorn src.api.main:app --reload
+```
+
+Tài liệu tương tác: <http://localhost:8000/docs>
+
+Hoặc chạy bằng Docker:
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Chi tiết: `docs/rest_api.md`.
+
 ---
 
 ## 🧪 Kiểm thử
@@ -230,6 +272,7 @@ Chi tiết quy tắc sinh: `docs/car_specs_generation.md`.
 | `docs/inference_pipeline.md` | Luồng suy luận và giao diện |
 | `docs/cli_and_benchmark.md` | Công cụ dòng lệnh và đo hiệu năng |
 | `docs/onnx_vs_pandas.md` | So sánh hiệu năng hai bản tư vấn |
+| `docs/ket_qua_danh_gia.md` | **Kết quả đánh giá hệ thống** |
 
 ---
 

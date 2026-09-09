@@ -1,0 +1,29 @@
+.git/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Khong dua bi mat vao anh Docker
+.env
+
+# Khong can khi chay
+notebooks/
+tests/
+docs/
+scripts/
+reports/
+*.md
+!README.md
+
+# Du lieu tho, chi can car_specs.csv
+data/raw/
+data/processed/
+
+# Checkpoint huan luyen (rat nang, khong dung khi chay)
+*.pt
+*.pth
+
+.vscode/
+.idea/
+.ipynb_checkpoints/

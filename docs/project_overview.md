@@ -246,6 +246,7 @@ biểu đồ loss/accuracy, cùng các chỉ số tổng hợp — dán thẳng 
 | `inference_pipeline.md` | Luồng suy luận local và giao diện |
 | `onnx_vs_pandas.md` | So sánh hiệu năng hai bản tư vấn |
 | `cli_and_benchmark.md` | Công cụ dòng lệnh và đo hiệu năng |
+| `ket_qua_danh_gia.md` | **Kết quả đánh giá hệ thống** |
 
 ## 9. Trích dẫn
 

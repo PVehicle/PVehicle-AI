@@ -1,0 +1,32 @@
+# Chay REST API bang Docker Compose.
+#
+#   docker compose up --build
+#
+# Tai lieu tuong tac: http://localhost:8000/docs
+
+services:
+  api:
+    build: .
+    image: pvehicle-ai-api:latest
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Ghi de vai gia tri cho moi truong container.
+      PVEHICLE_INFERENCE_WORKERS: "2"
+    volumes:
+      # Gan mo hinh tu ngoai vao de doi mo hinh khong phai build lai anh.
+      - ./models:/app/models:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          # Moi pipeline ton khoang 30 MB, cong them bo nho cua Python.
+          memory: 2G

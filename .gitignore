@@ -14,6 +14,7 @@ env/
 # Model weights (dung luong lon, khong day len git)
 *.pt
 *.onnx
+*.onnx.data
 *.pth
 models/class_names.json
 

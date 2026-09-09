@@ -252,6 +252,57 @@ Notebook xử lý bằng cách dựng lại ánh xạ `FOLDER_TO_CLASS` và sinh
 Nếu bỏ qua bước này, mô hình vẫn train bình thường và độ chính xác vẫn cao,
 nhưng **mọi tên xe hiển thị ra đều sai** — một lỗi rất khó phát hiện.
 
+## 11b. Ba lỗi đã gặp khi chạy trên Colab
+
+Cả ba đều bắt nguồn từ việc **môi trường Colab thay đổi theo thời gian**.
+
+### 1. Ghim phiên bản `onnxruntime` thất bại
+
+```text
+ERROR: Could not find a version that satisfies the requirement
+onnxruntime==1.19.2 (from versions: 1.20.0, ..., 1.24.1)
+```
+
+Colab nâng lên Python 3.13, mà `onnxruntime` không phát hành bản 1.19.2 cho
+phiên bản này. **Cách sửa:** bỏ ghim phiên bản trên Colab (xem mục 4b).
+
+### 2. Thiếu `onnxscript` khi export
+
+```text
+ModuleNotFoundError: No module named 'onnxscript'
+```
+
+Từ PyTorch 2.6, `torch.onnx.export` chuyển sang bộ export mới (`dynamo`) và
+bộ này yêu cầu `onnxscript`. Colab dùng PyTorch 2.11.
+
+**Cách sửa:** thêm `onnxscript` vào lệnh cài. Notebook còn bọc bước export
+trong `try/except` — nếu `dynamo` gặp trục trặc khác thì tự quay về bộ
+export cũ bằng `dynamo=False`.
+
+> Lỗi này khó chịu vì chỉ lộ ra **sau khi train xong cả tiếng**, đúng lúc
+> export. May là checkpoint đã lưu trên Drive nên chỉ cần chạy lại ô export.
+
+### 3. `Invalid cross-device link` khi chuyển file sang Drive
+
+```text
+OSError: [Errno 18] Invalid cross-device link:
+'yolov8n.onnx' -> '/content/drive/MyDrive/PVehicle-AI/yolov8n.onnx'
+```
+
+`Path.replace()` gọi `os.replace()` — hàm này chỉ đổi tên file **trong cùng
+một hệ thống tệp**. Nhưng `/content` là ổ đĩa cục bộ của Colab, còn
+`/content/drive` là Google Drive gắn qua FUSE — hai thiết bị khác nhau.
+
+**Cách sửa:** dùng `shutil.copy2()` thay cho `Path.replace()`.
+
+```python
+import shutil
+shutil.copy2(exported, YOLO_ONNX)
+```
+
+> Bài học chung: **không ghim phiên bản trên môi trường mình không kiểm soát
+> được.** Ngược lại, `requirements.txt` của máy local vẫn nên ghim.
+
 ## 12. Nguồn tham khảo
 
 - Krause et al., *3D Object Representations for Fine-Grained Categorization*,

@@ -125,10 +125,17 @@ dung cho export ONNX va thanh tien trinh.
 > Viec khac phien ban giua Colab va may local khong gay van de, vi mo hinh
 > duoc export voi `opset_version=17` — dinh dang on dinh ma ca hai ban deu
 > doc duoc.
+
+**`onnxscript` la bat buoc.** Tu PyTorch 2.6, `torch.onnx.export` chuyen
+sang bo export moi (`dynamo`) va bo nay can `onnxscript`. Thieu no se bao:
+
+```text
+ModuleNotFoundError: No module named 'onnxscript'
+```
 """)
 
 code("""
-!pip install -q onnx onnxruntime kaggle
+!pip install -q onnx onnxruntime onnxscript kaggle
 
 import scipy
 import torch
@@ -772,10 +779,7 @@ print(f'Nap checkpoint tot nhat: epoch {best_epoch}, top-1 {best_top1:.4f}')
 
 dummy_input = torch.randn(1, 3, IMAGE_SIZE, IMAGE_SIZE, device=DEVICE)
 
-torch.onnx.export(
-    best_model,
-    dummy_input,
-    str(ONNX_PATH),
+export_args = dict(
     input_names=['input'],
     output_names=['logits'],
     # Chi de batch dong; chieu rong/cao co dinh 224.
@@ -784,8 +788,29 @@ torch.onnx.export(
     do_constant_folding=True,
 )
 
+# dynamo=False: bat buoc dung bo export cu.
+#
+# Ly do: tu PyTorch 2.6, bo export moi (dynamo) tach trong so ra file rieng
+# `car_classifier.onnx.data`. File .onnx chi con cau truc (~0.6 MB), phai
+# luon di kem file .data (~16 MB) moi chay duoc. Rat de quen mot trong hai
+# khi chep file hay nop bai.
+#
+# Bo export cu gop tat ca vao MOT file duy nhat — de quan ly hon nhieu.
+torch.onnx.export(
+    best_model, dummy_input, str(ONNX_PATH),
+    dynamo=False, **export_args
+)
+
 size_mb = ONNX_PATH.stat().st_size / 1e6
 print(f'Da export: {ONNX_PATH} ({size_mb:.1f} MB)')
+
+# Kiem tra ngay: file phai chua ca trong so, khong tach ra ngoai.
+if size_mb < 5:
+    print()
+    print('CANH BAO: file qua nho so voi EfficientNet-B0 (~16-20 MB).')
+    print('Trong so co the da bi tach ra file .onnx.data rieng.')
+    print('Kiem tra thu muc Drive xem co file car_classifier.onnx.data')
+    print('hay khong — neu co thi phai tai ve CA HAI file.')
 """)
 
 md("""
@@ -853,6 +878,8 @@ Export ngay tai day vi Colab da co san torch. Chi mat vai chuc giay.
 code("""
 !pip install -q ultralytics
 
+import shutil
+
 from ultralytics import YOLO
 
 YOLO_ONNX = DRIVE_DIR / 'yolov8n.onnx'
@@ -869,7 +896,10 @@ else:
         # Khong nhung NMS: code local tu xu ly (src/cv/detector.py).
         nms=False,
     )
-    Path(exported).replace(YOLO_ONNX)
+    # Dung copy2 chu KHONG dung Path.replace(): file nguon nam o o dia
+    # cua Colab, con Drive duoc gan qua FUSE — la thiet bi khac. Doi ten
+    # qua hai thiet bi se loi "Invalid cross-device link".
+    shutil.copy2(exported, YOLO_ONNX)
     print('Da export:', YOLO_ONNX)
 
 print(f'Kich thuoc: {YOLO_ONNX.stat().st_size / 1e6:.1f} MB')
