@@ -788,22 +788,29 @@ export_args = dict(
     do_constant_folding=True,
 )
 
-try:
-    torch.onnx.export(
-        best_model, dummy_input, str(ONNX_PATH), **export_args
-    )
-except Exception as exc:
-    # PyTorch >= 2.6 mac dinh dung bo export moi (dynamo). Neu bo do gap
-    # van de, quay ve bo export cu — van cho file ONNX dung chuan.
-    print(f'Bo export mac dinh that bai: {exc}')
-    print('Thu lai bang bo export cu (dynamo=False)...')
-    torch.onnx.export(
-        best_model, dummy_input, str(ONNX_PATH),
-        dynamo=False, **export_args
-    )
+# dynamo=False: bat buoc dung bo export cu.
+#
+# Ly do: tu PyTorch 2.6, bo export moi (dynamo) tach trong so ra file rieng
+# `car_classifier.onnx.data`. File .onnx chi con cau truc (~0.6 MB), phai
+# luon di kem file .data (~16 MB) moi chay duoc. Rat de quen mot trong hai
+# khi chep file hay nop bai.
+#
+# Bo export cu gop tat ca vao MOT file duy nhat — de quan ly hon nhieu.
+torch.onnx.export(
+    best_model, dummy_input, str(ONNX_PATH),
+    dynamo=False, **export_args
+)
 
 size_mb = ONNX_PATH.stat().st_size / 1e6
 print(f'Da export: {ONNX_PATH} ({size_mb:.1f} MB)')
+
+# Kiem tra ngay: file phai chua ca trong so, khong tach ra ngoai.
+if size_mb < 5:
+    print()
+    print('CANH BAO: file qua nho so voi EfficientNet-B0 (~16-20 MB).')
+    print('Trong so co the da bi tach ra file .onnx.data rieng.')
+    print('Kiem tra thu muc Drive xem co file car_classifier.onnx.data')
+    print('hay khong — neu co thi phai tai ve CA HAI file.')
 """)
 
 md("""
