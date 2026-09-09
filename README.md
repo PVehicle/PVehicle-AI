@@ -9,6 +9,20 @@ CPU** — không cần GPU, không cần cài PyTorch.
 
 ---
 
+## 📈 Kết quả
+
+| Chỉ số | Kết quả |
+| :--- | ---: |
+| Độ chính xác **top-1** | **83.02%** |
+| Độ chính xác **top-5** | **95.26%** |
+| Tốc độ suy luận (CPU) | 135 ms/ảnh — 7.4 ảnh/giây |
+| Kiểm thử tự động | 69/69 pass |
+
+Mô hình: EfficientNet-B0, 196 lớp, 19 epoch trên Google Colab (GPU T4).
+Chi tiết: `docs/ket_qua_danh_gia.md`.
+
+---
+
 ## 🌟 Tính năng chính
 
 - **🔍 Nhận diện dòng xe** — kiến trúc 2 tầng: YOLOv8 khoanh vùng xe trong
@@ -230,6 +244,7 @@ Chi tiết quy tắc sinh: `docs/car_specs_generation.md`.
 | `docs/inference_pipeline.md` | Luồng suy luận và giao diện |
 | `docs/cli_and_benchmark.md` | Công cụ dòng lệnh và đo hiệu năng |
 | `docs/onnx_vs_pandas.md` | So sánh hiệu năng hai bản tư vấn |
+| `docs/ket_qua_danh_gia.md` | **Kết quả đánh giá hệ thống** |
 
 ---
 
