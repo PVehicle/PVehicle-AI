@@ -125,10 +125,17 @@ dung cho export ONNX va thanh tien trinh.
 > Viec khac phien ban giua Colab va may local khong gay van de, vi mo hinh
 > duoc export voi `opset_version=17` — dinh dang on dinh ma ca hai ban deu
 > doc duoc.
+
+**`onnxscript` la bat buoc.** Tu PyTorch 2.6, `torch.onnx.export` chuyen
+sang bo export moi (`dynamo`) va bo nay can `onnxscript`. Thieu no se bao:
+
+```text
+ModuleNotFoundError: No module named 'onnxscript'
+```
 """)
 
 code("""
-!pip install -q onnx onnxruntime kaggle
+!pip install -q onnx onnxruntime onnxscript kaggle
 
 import scipy
 import torch
@@ -772,10 +779,7 @@ print(f'Nap checkpoint tot nhat: epoch {best_epoch}, top-1 {best_top1:.4f}')
 
 dummy_input = torch.randn(1, 3, IMAGE_SIZE, IMAGE_SIZE, device=DEVICE)
 
-torch.onnx.export(
-    best_model,
-    dummy_input,
-    str(ONNX_PATH),
+export_args = dict(
     input_names=['input'],
     output_names=['logits'],
     # Chi de batch dong; chieu rong/cao co dinh 224.
@@ -783,6 +787,20 @@ torch.onnx.export(
     opset_version=17,
     do_constant_folding=True,
 )
+
+try:
+    torch.onnx.export(
+        best_model, dummy_input, str(ONNX_PATH), **export_args
+    )
+except Exception as exc:
+    # PyTorch >= 2.6 mac dinh dung bo export moi (dynamo). Neu bo do gap
+    # van de, quay ve bo export cu — van cho file ONNX dung chuan.
+    print(f'Bo export mac dinh that bai: {exc}')
+    print('Thu lai bang bo export cu (dynamo=False)...')
+    torch.onnx.export(
+        best_model, dummy_input, str(ONNX_PATH),
+        dynamo=False, **export_args
+    )
 
 size_mb = ONNX_PATH.stat().st_size / 1e6
 print(f'Da export: {ONNX_PATH} ({size_mb:.1f} MB)')
