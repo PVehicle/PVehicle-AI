@@ -1,0 +1,751 @@
+{
+  "_mo_ta": "Danh muc xe pho bien tai Viet Nam de mo rong mo hinh nhan dien. Moi muc gom tu khoa tim kiem tren Wikimedia Commons va thong so ky thuat. So lieu gia/tieu hao lay theo gia niem yet va cong bo cua hang tai VN nam 2024-2025, lam tron.",
+  "_luu_y": "Truong 'search' la cac tu khoa dung de tim anh. Truong 'exclude' loai bo anh khong phai ngoai that xe (noi that, dong co, logo...).",
+  "_nguon_anh": "Wikimedia Commons — giay phep tu do (CC BY-SA / CC0 / Public Domain).",
+  "exclude_keywords": [
+    "interior",
+    "dashboard",
+    "engine",
+    "logo",
+    "badge",
+    "emblem",
+    "wheel",
+    "seat",
+    "trunk",
+    "boot",
+    "headlight",
+    "taillight",
+    "steering",
+    "cockpit",
+    "diagram",
+    "map",
+    "chart",
+    "assembly",
+    "factory",
+    "plant",
+    "crash",
+    "accident",
+    "wreck",
+    "rally",
+    "police",
+    "taxi",
+    "ambulance",
+    "fire",
+    "military"
+  ],
+  "cars": [
+    {
+      "class_name": "Toyota Vios Sedan 2023",
+      "search": [
+        "Toyota Vios"
+      ],
+      "brand": "Toyota",
+      "model": "Vios",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 545,
+      "fuel_l_per_100km": 5.8
+    },
+    {
+      "class_name": "Toyota Corolla Cross SUV 2024",
+      "search": [
+        "Toyota Corolla Cross"
+      ],
+      "brand": "Toyota",
+      "model": "Corolla Cross",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 820,
+      "fuel_l_per_100km": 5.9
+    },
+    {
+      "class_name": "Toyota Fortuner SUV 2024",
+      "search": [
+        "Toyota Fortuner"
+      ],
+      "brand": "Toyota",
+      "model": "Fortuner",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 1055,
+      "fuel_l_per_100km": 8.6
+    },
+    {
+      "class_name": "Toyota Innova MPV 2023",
+      "search": [
+        "Toyota Innova"
+      ],
+      "brand": "Toyota",
+      "model": "Innova",
+      "body_style": "Minivan",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 870,
+      "fuel_l_per_100km": 7.8
+    },
+    {
+      "class_name": "Toyota Camry Sedan 2024",
+      "search": [
+        "Toyota Camry"
+      ],
+      "brand": "Toyota",
+      "model": "Camry",
+      "body_style": "Sedan",
+      "year": 2024,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 1105,
+      "fuel_l_per_100km": 7.0
+    },
+    {
+      "class_name": "Toyota Veloz MPV 2023",
+      "search": [
+        "Toyota Veloz",
+        "Toyota Avanza"
+      ],
+      "brand": "Toyota",
+      "model": "Veloz",
+      "body_style": "Minivan",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 658,
+      "fuel_l_per_100km": 6.2
+    },
+    {
+      "class_name": "Toyota Yaris Hatchback 2023",
+      "search": [
+        "Toyota Yaris"
+      ],
+      "brand": "Toyota",
+      "model": "Yaris",
+      "body_style": "Hatchback",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 668,
+      "fuel_l_per_100km": 6.0
+    },
+    {
+      "class_name": "Hyundai Accent Sedan 2024",
+      "search": [
+        "Hyundai Accent",
+        "Hyundai Verna"
+      ],
+      "brand": "Hyundai",
+      "model": "Accent",
+      "body_style": "Sedan",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 439,
+      "fuel_l_per_100km": 5.5
+    },
+    {
+      "class_name": "Hyundai Creta SUV 2024",
+      "search": [
+        "Hyundai Creta"
+      ],
+      "brand": "Hyundai",
+      "model": "Creta",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 599,
+      "fuel_l_per_100km": 6.6
+    },
+    {
+      "class_name": "Hyundai Tucson SUV 2024",
+      "search": [
+        "Hyundai Tucson"
+      ],
+      "brand": "Hyundai",
+      "model": "Tucson",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 799,
+      "fuel_l_per_100km": 7.2
+    },
+    {
+      "class_name": "Hyundai Santa Fe SUV 2024",
+      "search": [
+        "Hyundai Santa Fe"
+      ],
+      "brand": "Hyundai",
+      "model": "Santa Fe",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1069,
+      "fuel_l_per_100km": 7.5
+    },
+    {
+      "class_name": "Hyundai Elantra Sedan 2024",
+      "search": [
+        "Hyundai Elantra",
+        "Hyundai Avante"
+      ],
+      "brand": "Hyundai",
+      "model": "Elantra",
+      "body_style": "Sedan",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 599,
+      "fuel_l_per_100km": 6.2
+    },
+    {
+      "class_name": "Mitsubishi Xpander MPV 2024",
+      "search": [
+        "Mitsubishi Xpander"
+      ],
+      "brand": "Mitsubishi",
+      "model": "Xpander",
+      "body_style": "Minivan",
+      "year": 2024,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 598,
+      "fuel_l_per_100km": 6.5
+    },
+    {
+      "class_name": "Mitsubishi Attrage Sedan 2023",
+      "search": [
+        "Mitsubishi Attrage"
+      ],
+      "brand": "Mitsubishi",
+      "model": "Attrage",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 460,
+      "fuel_l_per_100km": 5.3
+    },
+    {
+      "class_name": "Mitsubishi Outlander SUV 2023",
+      "search": [
+        "Mitsubishi Outlander"
+      ],
+      "brand": "Mitsubishi",
+      "model": "Outlander",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 825,
+      "fuel_l_per_100km": 7.2
+    },
+    {
+      "class_name": "Mitsubishi Triton Pickup 2024",
+      "search": [
+        "Mitsubishi Triton"
+      ],
+      "brand": "Mitsubishi",
+      "model": "Triton",
+      "body_style": "Pickup",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 655,
+      "fuel_l_per_100km": 7.5
+    },
+    {
+      "class_name": "Ford Ranger Pickup 2023",
+      "search": [
+        "Ford Ranger"
+      ],
+      "brand": "Ford",
+      "model": "Ranger",
+      "body_style": "Pickup",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 707,
+      "fuel_l_per_100km": 7.6
+    },
+    {
+      "class_name": "Ford Everest SUV 2023",
+      "search": [
+        "Ford Everest"
+      ],
+      "brand": "Ford",
+      "model": "Everest",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 1099,
+      "fuel_l_per_100km": 7.5
+    },
+    {
+      "class_name": "Ford Territory SUV 2024",
+      "search": [
+        "Ford Territory"
+      ],
+      "brand": "Ford",
+      "model": "Territory",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 822,
+      "fuel_l_per_100km": 7.0
+    },
+    {
+      "class_name": "Mazda CX-5 SUV 2023",
+      "search": [
+        "Mazda CX-5"
+      ],
+      "brand": "Mazda",
+      "model": "CX-5",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 749,
+      "fuel_l_per_100km": 6.9
+    },
+    {
+      "class_name": "Mazda 3 Sedan 2023",
+      "search": [
+        "Mazda3",
+        "Mazda 3"
+      ],
+      "brand": "Mazda",
+      "model": "3",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 579,
+      "fuel_l_per_100km": 6.2
+    },
+    {
+      "class_name": "Mazda CX-8 SUV 2023",
+      "search": [
+        "Mazda CX-8"
+      ],
+      "brand": "Mazda",
+      "model": "CX-8",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 999,
+      "fuel_l_per_100km": 7.4
+    },
+    {
+      "class_name": "Mazda CX-30 SUV 2023",
+      "search": [
+        "Mazda CX-30"
+      ],
+      "brand": "Mazda",
+      "model": "CX-30",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 749,
+      "fuel_l_per_100km": 6.5
+    },
+    {
+      "class_name": "Honda City Sedan 2023",
+      "search": [
+        "Honda City"
+      ],
+      "brand": "Honda",
+      "model": "City",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 559,
+      "fuel_l_per_100km": 5.6
+    },
+    {
+      "class_name": "Honda CR-V SUV 2024",
+      "search": [
+        "Honda CR-V"
+      ],
+      "brand": "Honda",
+      "model": "CR-V",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1109,
+      "fuel_l_per_100km": 7.0
+    },
+    {
+      "class_name": "Honda HR-V SUV 2023",
+      "search": [
+        "Honda HR-V",
+        "Honda Vezel"
+      ],
+      "brand": "Honda",
+      "model": "HR-V",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 699,
+      "fuel_l_per_100km": 6.2
+    },
+    {
+      "class_name": "Honda Civic Sedan 2024",
+      "search": [
+        "Honda Civic"
+      ],
+      "brand": "Honda",
+      "model": "Civic",
+      "body_style": "Sedan",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 730,
+      "fuel_l_per_100km": 6.3
+    },
+    {
+      "class_name": "Kia Seltos SUV 2024",
+      "search": [
+        "Kia Seltos"
+      ],
+      "brand": "Kia",
+      "model": "Seltos",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 599,
+      "fuel_l_per_100km": 6.8
+    },
+    {
+      "class_name": "Kia Carnival MPV 2023",
+      "search": [
+        "Kia Carnival",
+        "Kia Sedona"
+      ],
+      "brand": "Kia",
+      "model": "Carnival",
+      "body_style": "Minivan",
+      "year": 2023,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1299,
+      "fuel_l_per_100km": 7.8
+    },
+    {
+      "class_name": "Kia Sorento SUV 2023",
+      "search": [
+        "Kia Sorento"
+      ],
+      "brand": "Kia",
+      "model": "Sorento",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 999,
+      "fuel_l_per_100km": 7.2
+    },
+    {
+      "class_name": "Kia Morning Hatchback 2023",
+      "search": [
+        "Kia Picanto",
+        "Kia Morning"
+      ],
+      "brand": "Kia",
+      "model": "Morning",
+      "body_style": "Hatchback",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 389,
+      "fuel_l_per_100km": 5.2
+    },
+    {
+      "class_name": "Kia K3 Sedan 2023",
+      "search": [
+        "Kia Cerato",
+        "Kia Forte"
+      ],
+      "brand": "Kia",
+      "model": "K3",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 599,
+      "fuel_l_per_100km": 6.4
+    },
+    {
+      "class_name": "VinFast VF 8 SUV 2023",
+      "search": [
+        "VinFast VF 8"
+      ],
+      "brand": "VinFast",
+      "model": "VF 8",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 1199,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF 5 SUV 2023",
+      "search": [
+        "VinFast VF 5"
+      ],
+      "brand": "VinFast",
+      "model": "VF 5",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 529,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "Suzuki XL7 MPV 2023",
+      "search": [
+        "Suzuki XL7",
+        "Suzuki XL6"
+      ],
+      "brand": "Suzuki",
+      "model": "XL7",
+      "body_style": "Minivan",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 599,
+      "fuel_l_per_100km": 6.5
+    },
+    {
+      "class_name": "Suzuki Ertiga MPV 2023",
+      "search": [
+        "Suzuki Ertiga"
+      ],
+      "brand": "Suzuki",
+      "model": "Ertiga",
+      "body_style": "Minivan",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 539,
+      "fuel_l_per_100km": 6.0
+    },
+    {
+      "class_name": "Suzuki Swift Hatchback 2023",
+      "search": [
+        "Suzuki Swift"
+      ],
+      "brand": "Suzuki",
+      "model": "Swift",
+      "body_style": "Hatchback",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 559,
+      "fuel_l_per_100km": 5.5
+    },
+    {
+      "class_name": "Nissan Almera Sedan 2023",
+      "search": [
+        "Nissan Almera",
+        "Nissan Versa"
+      ],
+      "brand": "Nissan",
+      "model": "Almera",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 539,
+      "fuel_l_per_100km": 5.4
+    },
+    {
+      "class_name": "Nissan Navara Pickup 2023",
+      "search": [
+        "Nissan Navara",
+        "Nissan Frontier"
+      ],
+      "brand": "Nissan",
+      "model": "Navara",
+      "body_style": "Pickup",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 679,
+      "fuel_l_per_100km": 7.4
+    },
+    {
+      "class_name": "Subaru Forester SUV 2023",
+      "search": [
+        "Subaru Forester"
+      ],
+      "brand": "Subaru",
+      "model": "Forester",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 969,
+      "fuel_l_per_100km": 7.9
+    },
+    {
+      "class_name": "Isuzu D-Max Pickup 2023",
+      "search": [
+        "Isuzu D-Max"
+      ],
+      "brand": "Isuzu",
+      "model": "D-Max",
+      "body_style": "Pickup",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 650,
+      "fuel_l_per_100km": 7.0
+    },
+    {
+      "class_name": "MG ZS SUV 2023",
+      "search": [
+        "MG ZS"
+      ],
+      "brand": "MG",
+      "model": "ZS",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 538,
+      "fuel_l_per_100km": 6.5
+    },
+    {
+      "class_name": "VinFast VF 3 SUV 2024",
+      "search": [
+        "VinFast VF 3"
+      ],
+      "brand": "VinFast",
+      "model": "VF 3",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 4,
+      "segment": "economy",
+      "price_million_vnd": 240,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF 6 SUV 2024",
+      "search": [
+        "VinFast VF 6"
+      ],
+      "brand": "VinFast",
+      "model": "VF 6",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 675,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF 7 SUV 2024",
+      "search": [
+        "VinFast VF 7"
+      ],
+      "brand": "VinFast",
+      "model": "VF 7",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 850,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF 9 SUV 2023",
+      "search": [
+        "VinFast VF 9"
+      ],
+      "brand": "VinFast",
+      "model": "VF 9",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1499,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast VF e34 SUV 2022",
+      "search": [
+        "VinFast VF e34"
+      ],
+      "brand": "VinFast",
+      "model": "VF e34",
+      "body_style": "SUV",
+      "year": 2022,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 710,
+      "fuel_l_per_100km": 0.0
+    },
+    {
+      "class_name": "VinFast Fadil Hatchback 2021",
+      "search": [
+        "VinFast Fadil"
+      ],
+      "brand": "VinFast",
+      "model": "Fadil",
+      "body_style": "Hatchback",
+      "year": 2021,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 425,
+      "fuel_l_per_100km": 6.0
+    },
+    {
+      "class_name": "VinFast Lux A2.0 Sedan 2021",
+      "search": [
+        "VinFast Lux A2.0"
+      ],
+      "brand": "VinFast",
+      "model": "Lux A2.0",
+      "body_style": "Sedan",
+      "year": 2021,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 1099,
+      "fuel_l_per_100km": 8.1
+    },
+    {
+      "class_name": "VinFast Lux SA2.0 SUV 2021",
+      "search": [
+        "VinFast Lux SA2.0"
+      ],
+      "brand": "VinFast",
+      "model": "Lux SA2.0",
+      "body_style": "SUV",
+      "year": 2021,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1299,
+      "fuel_l_per_100km": 9.8
+    }
+  ],
+  "_luu_y_tu_khoa": "Ten file tren Wikimedia hiem khi chua nam hoac ma the he. Tu khoa chi nen gom hang + dong xe. Bo loc yeu cau MOI tu trong tu khoa phai xuat hien trong ten file, nen them nam se loai bo gan het anh hop le.",
+  "_luu_y_vinfast": "VinFast la hang moi, rat it anh tren Wikimedia. So anh THUC TE tai duoc (do ngay 09/09/2026): VF 8=85, VF e34=44, VF 5=32, Lux A2.0=28, VF 3=26, VF 9=23, VF 7=23, VF 6=21, Fadil=10. Sau khi duyet nen loai cac lop duoi 40 anh khoi tap huan luyen — qua it se lam mo hinh hoc khong on dinh va keo tut do chinh xac cua ca tap."
+}
