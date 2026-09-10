@@ -80,7 +80,10 @@ def print_result(
                 f"conf={detection.confidence:.0%} "
                 f"loai={detection.class_name}"
             )
-        print(f"Xe {index}: {where}")
+        model_tag = (
+            "[xe VN]" if result.source == "vietnam" else "[quoc te]"
+        )
+        print(f"Xe {index}: {model_tag} {where}")
 
         if not result.is_confident:
             print(f"  (do tin cay chi {result.best.confidence:.1%} — "
@@ -121,6 +124,7 @@ def build_json(image_path: Path, results, recommender) -> dict:
                 "confidence": round(detection.confidence, 4),
                 "coco_class": detection.class_name,
             },
+            "source": result.source,
             "is_confident": result.is_confident,
             "predictions": [
                 {
@@ -131,8 +135,12 @@ def build_json(image_path: Path, results, recommender) -> dict:
                 for p in result.predictions
             ],
             "specs": None if specs is None else {
-                "body_style": specs["body_style"],
+                "brand": str(specs["brand"]),
+                "model": str(specs["model"]),
+                "body_style": str(specs["body_style"]),
+                "year": int(specs["year"]),
                 "seats": int(specs["seats"]),
+                "segment": str(specs["segment"]),
                 "price_million_vnd": float(specs["price_million_vnd"]),
                 "fuel_l_per_100km": float(specs["fuel_l_per_100km"]),
             },

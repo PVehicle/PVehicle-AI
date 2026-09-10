@@ -53,7 +53,8 @@ class TestHealthEndpoints(unittest.TestCase):
 
     def test_ready_bao_so_luong_xe(self):
         response = self.client.get("/ready")
-        self.assertEqual(response.json()["car_count"], 196)
+        # It nhat 196 xe quoc te; nhieu hon neu co du lieu xe VN.
+        self.assertGreaterEqual(response.json()["car_count"], 196)
 
     def test_root_tra_ve_duong_dan_tai_lieu(self):
         response = self.client.get("/")
@@ -81,7 +82,7 @@ class TestCarsEndpoints(unittest.TestCase):
     def test_liet_ke_va_phan_trang(self):
         response = self.client.get("/api/v1/cars?limit=5&offset=10")
         data = response.json()
-        self.assertEqual(data["total"], 196)
+        self.assertGreaterEqual(data["total"], 196)
         self.assertEqual(len(data["cars"]), 5)
         self.assertEqual(data["offset"], 10)
 

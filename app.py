@@ -207,6 +207,13 @@ def render_single_result(result, recommender) -> None:
         st.image(to_rgb(result.crop), use_container_width=True)
 
     with info_col:
+        # Cho biet ket qua den tu mo hinh nao — hai mo hinh phu hai tap
+        # xe khac nhau nen nguoi dung can biet de danh gia.
+        if result.source == "vietnam":
+            st.caption("🇻🇳 Mo hinh xe thi truong Viet Nam (20 dong)")
+        else:
+            st.caption("🌍 Mo hinh xe quoc te (196 dong, doi ≤2012)")
+
         if not result.is_confident:
             st.warning(
                 f"Do tin cay cao nhat chi {result.best.confidence:.1%} — "
@@ -219,6 +226,18 @@ def render_single_result(result, recommender) -> None:
                 f"{prediction.confidence:.1%}"
             )
             st.progress(prediction.confidence, text=label)
+
+        if result.alternative:
+            other = (
+                "xe quoc te" if result.source == "vietnam"
+                else "xe Viet Nam"
+            )
+            with st.expander(f"Mo hinh {other} doan gi?"):
+                for prediction in result.alternative[:3]:
+                    st.write(
+                        f"- {prediction.class_name} — "
+                        f"{prediction.confidence:.1%}"
+                    )
 
     specs = recommender.get_car(result.best.class_name)
     if specs is None:

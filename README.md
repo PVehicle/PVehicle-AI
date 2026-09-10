@@ -11,22 +11,29 @@ CPU** — không cần GPU, không cần cài PyTorch.
 
 ## 📈 Kết quả
 
-| Chỉ số | Kết quả |
-| :--- | ---: |
-| Độ chính xác **top-1** | **83.02%** |
-| Độ chính xác **top-5** | **95.26%** |
-| Tốc độ suy luận (CPU) | 135 ms/ảnh — 7.4 ảnh/giây |
-| Kiểm thử tự động | 91/91 pass |
+Hệ thống có **hai mô hình phân loại** chạy song song:
 
-Mô hình: EfficientNet-B0, 196 lớp, 19 epoch trên Google Colab (GPU T4).
-Chi tiết: `docs/ket_qua_danh_gia.md`.
+| Mô hình | Lớp | Top-1 | Top-5 |
+| :--- | ---: | ---: | ---: |
+| Xe quốc tế (Stanford Cars) | 196 | **83.02%** | **95.26%** |
+| Xe thị trường Việt Nam | 20 | **75.15%** | **92.02%** |
+
+| Chỉ số chung | Kết quả |
+| :--- | ---: |
+| Tốc độ suy luận (CPU) | 135 ms/ảnh — 7.4 ảnh/giây |
+| Kiểm thử tự động | 96/96 pass |
+
+Chi tiết: `docs/ket_qua_danh_gia.md`, `docs/dual_model.md`.
 
 ---
 
 ## 🌟 Tính năng chính
 
 - **🔍 Nhận diện dòng xe** — kiến trúc 2 tầng: YOLOv8 khoanh vùng xe trong
-  ảnh, sau đó EfficientNet-B0 phân loại chính xác dòng xe (196 lớp).
+  ảnh, sau đó EfficientNet-B0 phân loại dòng xe.
+- **🌍🇻🇳 Hai mô hình song song** — xe quốc tế (196 dòng, đời ≤2012) và xe
+  thị trường Việt Nam (20 dòng, 2021-2024); hệ thống tự chọn kết quả đáng
+  tin hơn.
 - **💡 Tư vấn thông minh** — gợi ý xe theo ngân sách, số chỗ ngồi, kiểu
   dáng và mức tiêu hao nhiên liệu.
 - **🔗 Liên kết hai module** — nhận diện ra xe nào thì gợi ý ngay các xe
@@ -54,7 +61,12 @@ Chi tiết: `docs/ket_qua_danh_gia.md`.
 | Tầng | Mô hình | Huấn luyện |
 | :--- | :--- | :--- |
 | 1. Phát hiện xe | YOLOv8n pretrained COCO | Không cần train |
-| 2. Phân loại dòng xe | EfficientNet-B0 (196 lớp) | Trên Google Colab |
+| 2a. Phân loại xe quốc tế | EfficientNet-B0 (196 lớp) | Trên Google Colab |
+| 2b. Phân loại xe Việt Nam | EfficientNet-B0 (20 lớp) | Trên Google Colab |
+
+Tầng 2 chạy **cả hai mô hình** rồi chọn kết quả đáng tin hơn — hai tập xe
+gần như không giao nhau (quốc tế đời ≤2012, Việt Nam đời 2021-2024).
+Chi tiết: `docs/dual_model.md`.
 
 > **Vì sao tách 2 tầng?** Stanford Cars không có bounding box theo từng dòng
 > xe, nên không thể train YOLOv8 ra thẳng 196 lớp. Dùng YOLOv8 pretrained
@@ -94,8 +106,11 @@ PVehicle-AI/
 │
 ├── models/                         # Mô hình ONNX (không đẩy lên git)
 │   ├── yolov8n.onnx                # Tầng 1: phát hiện xe
-│   ├── car_classifier.onnx         # Tầng 2: phân loại dòng xe
-│   └── class_names.json            # 196 nhãn theo đúng thứ tự
+│   ├── car_classifier.onnx         # Tầng 2: phân loại (196 lớp quốc tế)
+│   ├── class_names.json            # 196 nhãn theo đúng thứ tự
+│   ├── vn_car_classifier.onnx      # Tầng 2: phân loại xe VN (20 lớp)
+│   ├── vn_class_names.json         # 20 nhãn xe Việt Nam
+│   └── vn_car_specs.json           # Thông số xe VN (giá niêm yết thật)
 │
 ├── src/
 │   ├── utils.py                    # Logging, định vị đường dẫn
@@ -126,7 +141,7 @@ PVehicle-AI/
 ├── notebooks/
 │   └── train_classifier_colab.ipynb  # Huấn luyện trên Colab
 │
-├── tests/                          # 91 unit test
+├── tests/                          # 96 unit test
 └── docs/                           # Tài liệu kỹ thuật
 ```
 
@@ -273,6 +288,7 @@ Chi tiết quy tắc sinh: `docs/car_specs_generation.md`.
 | `docs/cli_and_benchmark.md` | Công cụ dòng lệnh và đo hiệu năng |
 | `docs/onnx_vs_pandas.md` | So sánh hiệu năng hai bản tư vấn |
 | `docs/ket_qua_danh_gia.md` | **Kết quả đánh giá hệ thống** |
+| `docs/dual_model.md` | **Hệ thống hai mô hình phân loại** |
 
 ---
 

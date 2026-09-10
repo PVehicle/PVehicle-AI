@@ -92,6 +92,14 @@ class DetectedVehicle(BaseModel):
         ),
     )
     predictions: list[Prediction]
+    source: str = Field(
+        default="international",
+        description=(
+            "Mo hinh dua ra ket qua: 'international' (196 dong xe quoc te, "
+            "doi <=2012) hoac 'vietnam' (20 dong xe thi truong VN, doi "
+            "2021-2024). He thong chay ca hai roi chon ket qua dang tin hon."
+        ),
+    )
     is_confident: bool = Field(
         description="Ket qua co vuot nguong dang tin khong"
     )

@@ -184,6 +184,7 @@ def build_vehicle(
             )
             for p in result.predictions
         ],
+        source=result.source,
         is_confident=result.is_confident,
         specs=specs,
         similar_cars=similar,

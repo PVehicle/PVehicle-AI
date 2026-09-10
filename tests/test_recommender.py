@@ -47,8 +47,19 @@ class TestRecommender(unittest.TestCase):
     def setUpClass(cls):
         cls.rec = CarRecommender()
 
-    def test_nap_du_196_xe(self):
-        self.assertEqual(len(self.rec.specs), 196)
+    def test_nap_it_nhat_196_xe(self):
+        """196 dong xe quoc te, cong them xe Viet Nam neu co mo hinh VN.
+
+        Khong kiem tra con so co dinh: so xe thay doi tuy theo may co file
+        models/vn_car_specs.json hay khong.
+        """
+        self.assertGreaterEqual(len(self.rec.specs), 196)
+
+    def test_ten_xe_khong_trung_nhau(self):
+        """Ten lop la khoa noi giua mo hinh nhan dien va bang thong so,
+        nen khong duoc phep trung."""
+        names = self.rec.specs["class_name"]
+        self.assertEqual(len(names), len(set(names)))
 
     def test_moi_xe_co_dac_trung_rieng(self):
         """Tranh truong hop nhieu xe trung het thong so, khien ket qua
@@ -57,7 +68,7 @@ class TestRecommender(unittest.TestCase):
             "price_million_vnd", "seats", "fuel_l_per_100km",
             "body_style", "segment",
         ])
-        self.assertEqual(len(combos), 196)
+        self.assertEqual(len(combos), len(self.rec.specs))
 
     def test_ton_trong_ngan_sach(self):
         """Dieu kien loc la rang buoc cung, khong duoc goi y xe vuot gia."""

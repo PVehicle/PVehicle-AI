@@ -212,6 +212,58 @@ class TestPipeline(unittest.TestCase):
         np.testing.assert_array_equal(image, original)
 
 
+class TestHaiMoHinh(unittest.TestCase):
+    """Kiem tra co che chay song song hai mo hinh phan loai.
+
+    Mo hinh quoc te (196 lop, xe doi <=2012) va mo hinh xe Viet Nam
+    (20 lop, doi 2021-2024) phu hai tap xe khac nhau. Pipeline chay ca
+    hai roi chon ket qua dang tin hon.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        if not MODELS_READY:
+            raise unittest.SkipTest("Chua co mo hinh ONNX")
+        cls.pipeline = RecognitionPipeline()
+
+    def test_ghi_nhan_nguon_mo_hinh(self):
+        """Moi ket qua phai cho biet mo hinh nao dua ra."""
+        results = self.pipeline.recognize(make_test_image())
+        for result in results:
+            self.assertIn(result.source, ("international", "vietnam"))
+
+    def test_co_ket_qua_mo_hinh_con_lai(self):
+        """Khi chay ca hai mo hinh, ket qua kia phai duoc giu lai."""
+        if self.pipeline.vn_classifier is None:
+            self.skipTest("Chua co mo hinh xe Viet Nam")
+
+        results = self.pipeline.recognize(make_test_image())
+        for result in results:
+            self.assertIsNotNone(result.alternative)
+            self.assertGreater(len(result.alternative), 0)
+
+    def test_khong_co_mo_hinh_vn_van_chay(self):
+        """Thieu mo hinh xe VN thi he thong van hoat dong binh thuong."""
+        pipeline = RecognitionPipeline(
+            vn_classifier_path=Path("khong-ton-tai.onnx"),
+            vn_labels_path=Path("khong-ton-tai.json"),
+        )
+        self.assertIsNone(pipeline.vn_classifier)
+
+        results = pipeline.recognize(make_test_image())
+        for result in results:
+            self.assertEqual(result.source, "international")
+            self.assertIsNone(result.alternative)
+
+    def test_he_so_phat_nam_trong_khoang_hop_ly(self):
+        """He so phat qua thap se lam mo hinh VN khong bao gio duoc chon,
+        qua cao thi mat tac dung bu chenh lech so lop."""
+        from src.cv.pipeline import VN_CONFIDENCE_PENALTY
+
+        self.assertGreater(VN_CONFIDENCE_PENALTY, 0.5)
+        self.assertLessEqual(VN_CONFIDENCE_PENALTY, 1.0)
+
+
 class TestNguongTinCay(unittest.TestCase):
     """Kiem tra co che phat hien anh khong phai o to.
 
