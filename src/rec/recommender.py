@@ -12,17 +12,22 @@ Thuat toan la content-based filtering: bieu dien moi xe thanh mot vector
 dac trung da chuan hoa, roi do khoang cach. Xem docs/recommendation.md.
 """
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from src.utils import DATA_DIR, get_logger
+from src.utils import DATA_DIR, MODELS_DIR, get_logger
 
 logger = get_logger(__name__)
 
 CAR_SPECS_FILE = DATA_DIR / "car_specs.csv"
+
+# Thong so xe thi truong Viet Nam, sinh ra cung luc voi mo hinh xe VN.
+# Tuy chon: thieu file nay thi chi co 196 dong xe quoc te.
+VN_CAR_SPECS_FILE = MODELS_DIR / "vn_car_specs.json"
 
 REQUIRED_COLUMNS = (
     "class_id", "class_name", "brand", "model", "body_style",
@@ -89,7 +94,11 @@ def _minmax_normalize(values: pd.Series) -> np.ndarray:
 class CarRecommender:
     """He thong tu van xe dua tren thong so ky thuat."""
 
-    def __init__(self, specs_path: Path = CAR_SPECS_FILE) -> None:
+    def __init__(
+        self,
+        specs_path: Path = CAR_SPECS_FILE,
+        vn_specs_path: Path = VN_CAR_SPECS_FILE,
+    ) -> None:
         if not specs_path.exists():
             raise FileNotFoundError(
                 f"Khong tim thay bang thong so xe: {specs_path}. "
@@ -104,8 +113,59 @@ class CarRecommender:
                 f"Bang thong so thieu cot: {sorted(missing)}"
             )
 
+        n_international = len(self.specs)
+        n_vietnam = self._append_vn_specs(vn_specs_path)
+
         self._build_feature_matrix()
-        logger.info("Da nap thong so cua %d dong xe", len(self.specs))
+        if n_vietnam:
+            logger.info(
+                "Da nap thong so cua %d dong xe (%d quoc te + %d Viet Nam)",
+                len(self.specs), n_international, n_vietnam,
+            )
+        else:
+            logger.info(
+                "Da nap thong so cua %d dong xe", len(self.specs)
+            )
+
+    def _append_vn_specs(self, vn_specs_path: Path) -> int:
+        """Gop them thong so xe Viet Nam neu co. Tra ve so dong da them.
+
+        File nay sinh ra cung luc voi mo hinh xe VN. Thieu no thi module
+        tu van van chay binh thuong voi 196 dong xe quoc te.
+        """
+        if not vn_specs_path.exists():
+            return 0
+
+        raw = json.loads(vn_specs_path.read_text(encoding="utf-8"))
+        rows = list(raw.values())
+        if not rows:
+            return 0
+
+        vn_frame = pd.DataFrame(rows)
+
+        missing = set(REQUIRED_COLUMNS) - set(vn_frame.columns) - {
+            "class_id"
+        }
+        if missing:
+            logger.warning(
+                "Bo qua %s: thieu cot %s",
+                vn_specs_path.name, sorted(missing),
+            )
+            return 0
+
+        # Danh so tiep noi bang quoc te de class_id khong bi trung.
+        vn_frame["class_id"] = range(
+            len(self.specs) + 1, len(self.specs) + 1 + len(vn_frame)
+        )
+        vn_frame["data_source"] = "vietnam"
+        self.specs["data_source"] = self.specs.get(
+            "data_source", "derived+simulated"
+        )
+
+        self.specs = pd.concat(
+            [self.specs, vn_frame], ignore_index=True
+        )
+        return len(vn_frame)
 
     def _build_feature_matrix(self) -> None:
         """Dung ma tran dac trung da chuan hoa de do do tuong dong.

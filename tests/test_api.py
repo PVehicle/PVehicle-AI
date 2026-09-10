@@ -53,7 +53,8 @@ class TestHealthEndpoints(unittest.TestCase):
 
     def test_ready_bao_so_luong_xe(self):
         response = self.client.get("/ready")
-        self.assertEqual(response.json()["car_count"], 196)
+        # It nhat 196 xe quoc te; nhieu hon neu co du lieu xe VN.
+        self.assertGreaterEqual(response.json()["car_count"], 196)
 
     def test_root_tra_ve_duong_dan_tai_lieu(self):
         response = self.client.get("/")
@@ -63,6 +64,54 @@ class TestHealthEndpoints(unittest.TestCase):
         response = self.client.get("/openapi.json")
         self.assertEqual(response.status_code, 200)
         self.assertIn("/api/v1/recognize", response.json()["paths"])
+
+
+@unittest.skipUnless(API_AVAILABLE, "Chua cai fastapi/httpx")
+class TestCorsForBrowser(unittest.TestCase):
+    """Kiem tra CORS du de trinh duyet goi duoc.
+
+    Frontend chay o cong khac backend (Angular 4200, API 8000) nen moi
+    request deu la cross-origin. Thieu cau hinh CORS thi trinh duyet chan,
+    ma loi chi hien trong console — khong lo ra o phia backend.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.client = TestClient(app)
+        cls.client.__enter__()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.client.__exit__(None, None, None)
+
+    def test_preflight_cho_phep_post(self):
+        """Trinh duyet gui OPTIONS truoc khi POST multipart."""
+        response = self.client.options(
+            "/api/v1/recognize",
+            headers={
+                "Origin": "http://localhost:4200",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "x-api-key",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        allowed = response.headers.get("access-control-allow-methods", "")
+        self.assertIn("POST", allowed)
+
+    def test_expose_header_de_frontend_doc_duoc(self):
+        """X-Request-ID phai duoc expose, khong thi JavaScript khong doc
+        duoc du header van ve trong response."""
+        response = self.client.get(
+            "/health", headers={"Origin": "http://localhost:4200"}
+        )
+        exposed = response.headers.get(
+            "access-control-expose-headers", ""
+        )
+        self.assertIn("X-Request-ID", exposed)
+
+    def test_co_header_request_id(self):
+        response = self.client.get("/health")
+        self.assertIn("X-Request-ID", response.headers)
 
 
 @unittest.skipUnless(API_AVAILABLE, "Chua cai fastapi/httpx")
@@ -81,7 +130,7 @@ class TestCarsEndpoints(unittest.TestCase):
     def test_liet_ke_va_phan_trang(self):
         response = self.client.get("/api/v1/cars?limit=5&offset=10")
         data = response.json()
-        self.assertEqual(data["total"], 196)
+        self.assertGreaterEqual(data["total"], 196)
         self.assertEqual(len(data["cars"]), 5)
         self.assertEqual(data["offset"], 10)
 
@@ -101,22 +150,31 @@ class TestCarsEndpoints(unittest.TestCase):
         self.assertLess(data["price_min"], data["price_max"])
 
     def test_tra_cuu_mot_dong_xe(self):
-        response = self.client.get("/api/v1/cars/Tesla Model S Sedan 2012")
+        # Lay ten xe tu API thay vi viet cung: ten lop co the doi.
+        name = self.client.get(
+            "/api/v1/cars?limit=1"
+        ).json()["cars"][0]["class_name"]
+
+        response = self.client.get(f"/api/v1/cars/{name}")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["brand"], "Tesla")
+        self.assertEqual(response.json()["class_name"], name)
 
     def test_ten_xe_khong_ton_tai_tra_404(self):
         response = self.client.get("/api/v1/cars/Xe Khong Co That 2099")
         self.assertEqual(response.status_code, 404)
 
     def test_tim_xe_tuong_tu(self):
+        name = self.client.get(
+            "/api/v1/cars?limit=1"
+        ).json()["cars"][0]["class_name"]
+
         response = self.client.get(
-            "/api/v1/cars/Tesla Model S Sedan 2012/similar?top_n=3"
+            f"/api/v1/cars/{name}/similar?top_n=3"
         )
         data = response.json()
         self.assertEqual(data["count"], 3)
         names = [car["class_name"] for car in data["cars"]]
-        self.assertNotIn("Tesla Model S Sedan 2012", names)
+        self.assertNotIn(name, names)
 
 
 @unittest.skipUnless(API_AVAILABLE, "Chua cai fastapi/httpx")

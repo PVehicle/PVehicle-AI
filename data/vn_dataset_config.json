@@ -1,0 +1,376 @@
+{
+  "num_classes": 20,
+  "total_images": 1673,
+  "test_ratio": 0.2,
+  "classes": [
+    "Honda City Sedan 2023",
+    "Hyundai Accent Sedan 2024",
+    "Hyundai Creta SUV 2024",
+    "Toyota Camry Sedan 2024",
+    "Toyota Corolla Cross SUV 2024",
+    "Toyota Fortuner SUV 2024",
+    "Toyota Innova MPV 2023",
+    "Toyota Veloz MPV 2023",
+    "Toyota Vios Sedan 2023",
+    "Toyota Yaris Hatchback 2023",
+    "VinFast Fadil Hatchback 2021",
+    "VinFast Lux A2.0 Sedan 2021",
+    "VinFast Lux SA2.0 SUV 2021",
+    "VinFast VF 3 SUV 2024",
+    "VinFast VF 5 SUV 2023",
+    "VinFast VF 6 SUV 2024",
+    "VinFast VF 7 SUV 2024",
+    "VinFast VF 8 SUV 2023",
+    "VinFast VF 9 SUV 2023",
+    "VinFast VF e34 SUV 2022"
+  ],
+  "counts": {
+    "Honda City Sedan 2023": 58,
+    "Hyundai Accent Sedan 2024": 157,
+    "Hyundai Creta SUV 2024": 52,
+    "Toyota Camry Sedan 2024": 186,
+    "Toyota Corolla Cross SUV 2024": 187,
+    "Toyota Fortuner SUV 2024": 115,
+    "Toyota Innova MPV 2023": 112,
+    "Toyota Veloz MPV 2023": 151,
+    "Toyota Vios Sedan 2023": 156,
+    "Toyota Yaris Hatchback 2023": 174,
+    "VinFast Fadil Hatchback 2021": 14,
+    "VinFast Lux A2.0 Sedan 2021": 34,
+    "VinFast Lux SA2.0 SUV 2021": 17,
+    "VinFast VF 3 SUV 2024": 27,
+    "VinFast VF 5 SUV 2023": 32,
+    "VinFast VF 6 SUV 2024": 21,
+    "VinFast VF 7 SUV 2024": 24,
+    "VinFast VF 8 SUV 2023": 85,
+    "VinFast VF 9 SUV 2023": 25,
+    "VinFast VF e34 SUV 2022": 46
+  },
+  "split": {
+    "Honda City Sedan 2023": {
+      "train": 46,
+      "test": 12
+    },
+    "Hyundai Accent Sedan 2024": {
+      "train": 126,
+      "test": 31
+    },
+    "Hyundai Creta SUV 2024": {
+      "train": 42,
+      "test": 10
+    },
+    "Toyota Camry Sedan 2024": {
+      "train": 149,
+      "test": 37
+    },
+    "Toyota Corolla Cross SUV 2024": {
+      "train": 150,
+      "test": 37
+    },
+    "Toyota Fortuner SUV 2024": {
+      "train": 92,
+      "test": 23
+    },
+    "Toyota Innova MPV 2023": {
+      "train": 90,
+      "test": 22
+    },
+    "Toyota Veloz MPV 2023": {
+      "train": 121,
+      "test": 30
+    },
+    "Toyota Vios Sedan 2023": {
+      "train": 125,
+      "test": 31
+    },
+    "Toyota Yaris Hatchback 2023": {
+      "train": 139,
+      "test": 35
+    },
+    "VinFast Fadil Hatchback 2021": {
+      "train": 11,
+      "test": 3
+    },
+    "VinFast Lux A2.0 Sedan 2021": {
+      "train": 27,
+      "test": 7
+    },
+    "VinFast Lux SA2.0 SUV 2021": {
+      "train": 14,
+      "test": 3
+    },
+    "VinFast VF 3 SUV 2024": {
+      "train": 22,
+      "test": 5
+    },
+    "VinFast VF 5 SUV 2023": {
+      "train": 26,
+      "test": 6
+    },
+    "VinFast VF 6 SUV 2024": {
+      "train": 17,
+      "test": 4
+    },
+    "VinFast VF 7 SUV 2024": {
+      "train": 19,
+      "test": 5
+    },
+    "VinFast VF 8 SUV 2023": {
+      "train": 68,
+      "test": 17
+    },
+    "VinFast VF 9 SUV 2023": {
+      "train": 20,
+      "test": 5
+    },
+    "VinFast VF e34 SUV 2022": {
+      "train": 37,
+      "test": 9
+    }
+  },
+  "class_weights": {
+    "Honda City Sedan 2023": 1.724,
+    "Hyundai Accent Sedan 2024": 1.0,
+    "Hyundai Creta SUV 2024": 1.923,
+    "Toyota Camry Sedan 2024": 1.0,
+    "Toyota Corolla Cross SUV 2024": 1.0,
+    "Toyota Fortuner SUV 2024": 1.0,
+    "Toyota Innova MPV 2023": 1.0,
+    "Toyota Veloz MPV 2023": 1.0,
+    "Toyota Vios Sedan 2023": 1.0,
+    "Toyota Yaris Hatchback 2023": 1.0,
+    "VinFast Fadil Hatchback 2021": 7.143,
+    "VinFast Lux A2.0 Sedan 2021": 2.941,
+    "VinFast Lux SA2.0 SUV 2021": 5.882,
+    "VinFast VF 3 SUV 2024": 3.704,
+    "VinFast VF 5 SUV 2023": 3.125,
+    "VinFast VF 6 SUV 2024": 4.762,
+    "VinFast VF 7 SUV 2024": 4.167,
+    "VinFast VF 8 SUV 2023": 1.176,
+    "VinFast VF 9 SUV 2023": 4.0,
+    "VinFast VF e34 SUV 2022": 2.174
+  },
+  "specs": {
+    "Honda City Sedan 2023": {
+      "class_name": "Honda City Sedan 2023",
+      "brand": "Honda",
+      "model": "City",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 559,
+      "fuel_l_per_100km": 5.6
+    },
+    "Hyundai Accent Sedan 2024": {
+      "class_name": "Hyundai Accent Sedan 2024",
+      "brand": "Hyundai",
+      "model": "Accent",
+      "body_style": "Sedan",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 439,
+      "fuel_l_per_100km": 5.5
+    },
+    "Hyundai Creta SUV 2024": {
+      "class_name": "Hyundai Creta SUV 2024",
+      "brand": "Hyundai",
+      "model": "Creta",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 599,
+      "fuel_l_per_100km": 6.6
+    },
+    "Toyota Camry Sedan 2024": {
+      "class_name": "Toyota Camry Sedan 2024",
+      "brand": "Toyota",
+      "model": "Camry",
+      "body_style": "Sedan",
+      "year": 2024,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 1105,
+      "fuel_l_per_100km": 7.0
+    },
+    "Toyota Corolla Cross SUV 2024": {
+      "class_name": "Toyota Corolla Cross SUV 2024",
+      "brand": "Toyota",
+      "model": "Corolla Cross",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 820,
+      "fuel_l_per_100km": 5.9
+    },
+    "Toyota Fortuner SUV 2024": {
+      "class_name": "Toyota Fortuner SUV 2024",
+      "brand": "Toyota",
+      "model": "Fortuner",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 1055,
+      "fuel_l_per_100km": 8.6
+    },
+    "Toyota Innova MPV 2023": {
+      "class_name": "Toyota Innova MPV 2023",
+      "brand": "Toyota",
+      "model": "Innova",
+      "body_style": "Minivan",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 870,
+      "fuel_l_per_100km": 7.8
+    },
+    "Toyota Veloz MPV 2023": {
+      "class_name": "Toyota Veloz MPV 2023",
+      "brand": "Toyota",
+      "model": "Veloz",
+      "body_style": "Minivan",
+      "year": 2023,
+      "seats": 7,
+      "segment": "economy",
+      "price_million_vnd": 658,
+      "fuel_l_per_100km": 6.2
+    },
+    "Toyota Vios Sedan 2023": {
+      "class_name": "Toyota Vios Sedan 2023",
+      "brand": "Toyota",
+      "model": "Vios",
+      "body_style": "Sedan",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 545,
+      "fuel_l_per_100km": 5.8
+    },
+    "Toyota Yaris Hatchback 2023": {
+      "class_name": "Toyota Yaris Hatchback 2023",
+      "brand": "Toyota",
+      "model": "Yaris",
+      "body_style": "Hatchback",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 668,
+      "fuel_l_per_100km": 6.0
+    },
+    "VinFast Fadil Hatchback 2021": {
+      "class_name": "VinFast Fadil Hatchback 2021",
+      "brand": "VinFast",
+      "model": "Fadil",
+      "body_style": "Hatchback",
+      "year": 2021,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 425,
+      "fuel_l_per_100km": 6.0
+    },
+    "VinFast Lux A2.0 Sedan 2021": {
+      "class_name": "VinFast Lux A2.0 Sedan 2021",
+      "brand": "VinFast",
+      "model": "Lux A2.0",
+      "body_style": "Sedan",
+      "year": 2021,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 1099,
+      "fuel_l_per_100km": 8.1
+    },
+    "VinFast Lux SA2.0 SUV 2021": {
+      "class_name": "VinFast Lux SA2.0 SUV 2021",
+      "brand": "VinFast",
+      "model": "Lux SA2.0",
+      "body_style": "SUV",
+      "year": 2021,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1299,
+      "fuel_l_per_100km": 9.8
+    },
+    "VinFast VF 3 SUV 2024": {
+      "class_name": "VinFast VF 3 SUV 2024",
+      "brand": "VinFast",
+      "model": "VF 3",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 4,
+      "segment": "economy",
+      "price_million_vnd": 240,
+      "fuel_l_per_100km": 0.0
+    },
+    "VinFast VF 5 SUV 2023": {
+      "class_name": "VinFast VF 5 SUV 2023",
+      "brand": "VinFast",
+      "model": "VF 5",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 529,
+      "fuel_l_per_100km": 0.0
+    },
+    "VinFast VF 6 SUV 2024": {
+      "class_name": "VinFast VF 6 SUV 2024",
+      "brand": "VinFast",
+      "model": "VF 6",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 675,
+      "fuel_l_per_100km": 0.0
+    },
+    "VinFast VF 7 SUV 2024": {
+      "class_name": "VinFast VF 7 SUV 2024",
+      "brand": "VinFast",
+      "model": "VF 7",
+      "body_style": "SUV",
+      "year": 2024,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 850,
+      "fuel_l_per_100km": 0.0
+    },
+    "VinFast VF 8 SUV 2023": {
+      "class_name": "VinFast VF 8 SUV 2023",
+      "brand": "VinFast",
+      "model": "VF 8",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 5,
+      "segment": "luxury",
+      "price_million_vnd": 1199,
+      "fuel_l_per_100km": 0.0
+    },
+    "VinFast VF 9 SUV 2023": {
+      "class_name": "VinFast VF 9 SUV 2023",
+      "brand": "VinFast",
+      "model": "VF 9",
+      "body_style": "SUV",
+      "year": 2023,
+      "seats": 7,
+      "segment": "luxury",
+      "price_million_vnd": 1499,
+      "fuel_l_per_100km": 0.0
+    },
+    "VinFast VF e34 SUV 2022": {
+      "class_name": "VinFast VF e34 SUV 2022",
+      "brand": "VinFast",
+      "model": "VF e34",
+      "body_style": "SUV",
+      "year": 2022,
+      "seats": 5,
+      "segment": "economy",
+      "price_million_vnd": 710,
+      "fuel_l_per_100km": 0.0
+    }
+  },
+  "_luu_y": "class_weights dung cho ham mat mat va bo lay mau. Lop it anh co trong so cao hon de mo hinh khong bo qua."
+}

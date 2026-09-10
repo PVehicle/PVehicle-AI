@@ -121,6 +121,7 @@ def build_json(image_path: Path, results, recommender) -> dict:
                 "confidence": round(detection.confidence, 4),
                 "coco_class": detection.class_name,
             },
+            "source": result.source,
             "is_confident": result.is_confident,
             "predictions": [
                 {
@@ -131,8 +132,12 @@ def build_json(image_path: Path, results, recommender) -> dict:
                 for p in result.predictions
             ],
             "specs": None if specs is None else {
-                "body_style": specs["body_style"],
+                "brand": str(specs["brand"]),
+                "model": str(specs["model"]),
+                "body_style": str(specs["body_style"]),
+                "year": int(specs["year"]),
                 "seats": int(specs["seats"]),
+                "segment": str(specs["segment"]),
                 "price_million_vnd": float(specs["price_million_vnd"]),
                 "fuel_l_per_100km": float(specs["fuel_l_per_100km"]),
             },

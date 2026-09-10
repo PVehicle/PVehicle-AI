@@ -1,0 +1,1058 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PVehicle-AI API",
+    "description": "\nREST API cho he thong nhan dien va tu van o to.\n\n## Chuc nang\n\n* **Nhan dien xe** — tai anh len, nhan ve dong xe kem thong so ky thuat\n* **Tra cuu danh muc** — 196 dong xe voi day du thong so\n* **Goi y theo nhu cau** — loc theo ngan sach, so cho, kieu dang\n* **Tim xe tuong tu** — dua tren dac diem cua mot xe cho truoc\n\n## Kien truc nhan dien\n\nHai tang: YOLOv8n khoanh vung xe trong anh, sau do EfficientNet-B0 phan\nloai chi tiet 196 dong xe. Toan bo chay bang ONNX Runtime tren CPU.\n\n## Xac thuc\n\nNeu may chu duoc cau hinh API key, moi request phai kem header\n`X-API-Key`. Cac endpoint `/health` va `/ready` luon mo.\n\n## Luu y ve du lieu\n\nGia ban va muc tieu hao nhien lieu la **so lieu mo phong**, khong phai gia\nthi truong that. Xem `docs/car_specs_generation.md`.\n",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "description": "Kiem tra tien trinh con song. Luon tra 200 neu may chu con chay.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Ready",
+        "description": "Kiem tra da san sang phuc vu chua.\n\nTra 503 khi chua nap duoc mo hinh nhan dien, de bo can bang tai khong\ndinh tuyen request vao ban sao nay.",
+        "operationId": "ready_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadinessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recognize": {
+      "post": {
+        "tags": [
+          "recognition"
+        ],
+        "summary": "Nhan dien dong xe tu anh",
+        "description": "Nhan dien cac dong xe co trong anh.\n\nLuong xu ly: YOLOv8 khoanh vung xe → crop → phan loai 196 lop → tra\nve top-k kha nang kem thong so ky thuat.\n\nNeu khong phat hien duoc xe nao, he thong phan loai toan bo buc anh\nva danh dau `box = null`.",
+        "operationId": "recognize_api_v1_recognize_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "top_k",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 20,
+              "minimum": 1,
+              "default": 5,
+              "title": "Top K"
+            }
+          },
+          {
+            "name": "include_similar",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Tra kem cac xe tuong tu",
+              "default": false,
+              "title": "Include Similar"
+            },
+            "description": "Tra kem cac xe tuong tu"
+          },
+          {
+            "name": "similar_count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 10,
+              "minimum": 1,
+              "default": 3,
+              "title": "Similar Count"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_recognize_api_v1_recognize_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecognitionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "File rong hoac anh hong"
+          },
+          "413": {
+            "description": "File hoac anh qua lon"
+          },
+          "415": {
+            "description": "Dinh dang khong duoc ho tro"
+          },
+          "503": {
+            "description": "Mo hinh nhan dien chua san sang"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cars": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Liet ke danh muc xe",
+        "description": "Tra ve danh muc xe, co the loc va phan trang.\n\nCac bo loc so sanh khong phan biet hoa thuong.",
+        "operationId": "list_cars_api_v1_cars_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "brand",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Loc theo hang",
+              "title": "Brand"
+            },
+            "description": "Loc theo hang"
+          },
+          {
+            "name": "body_style",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Body Style"
+            }
+          },
+          {
+            "name": "segment",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Segment"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cars/filters": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Lay cac gia tri hop le de loc",
+        "description": "Tra ve cac gia tri co the dung khi loc.\n\nGiao dien nen goi endpoint nay de dung form thay vi viet cung danh\nsach — bang thong so co the thay doi.",
+        "operationId": "get_filters_api_v1_cars_filters_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterOptions"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/cars/{class_name}": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Tra cuu thong so mot dong xe",
+        "description": "Tra cuu thong so theo ten lop day du.\n\nVi du: `Tesla Model S Sedan 2012`",
+        "operationId": "get_car_api_v1_cars__class_name__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "class_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Class Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarSpecs"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Khong tim thay dong xe"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cars/{class_name}/similar": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Tim cac xe tuong tu",
+        "description": "Tim cac xe co dac diem gan giong xe da cho.",
+        "operationId": "similar_cars_api_v1_cars__class_name__similar_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "class_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Class Name"
+            }
+          },
+          {
+            "name": "top_n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 20,
+              "minimum": 1,
+              "default": 5,
+              "title": "Top N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Khong tim thay dong xe"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recommend": {
+      "post": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Goi y xe theo nhu cau",
+        "description": "Goi y xe phu hop voi nhu cau nguoi dung.\n\nCac dieu kien la RANG BUOC CUNG: xe khong thoa man bi loai han khoi\nket qua. Nguoi dung noi \"toi da 800 trieu\" thi khong goi y xe 1 ty du\nno tot den may.\n\nDanh sach rong nghia la khong co xe nao thoa man — hay noi long dieu\nkien.",
+        "operationId": "recommend_api_v1_recommend_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecommendRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_recognize_api_v1_recognize_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File",
+            "description": "Anh chua xe can nhan dien"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_recognize_api_v1_recognize_post"
+      },
+      "BoundingBox": {
+        "properties": {
+          "x1": {
+            "type": "integer",
+            "title": "X1",
+            "description": "Toa do trai"
+          },
+          "y1": {
+            "type": "integer",
+            "title": "Y1",
+            "description": "Toa do tren"
+          },
+          "x2": {
+            "type": "integer",
+            "title": "X2",
+            "description": "Toa do phai"
+          },
+          "y2": {
+            "type": "integer",
+            "title": "Y2",
+            "description": "Toa do duoi"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "description": "Do tin cay cua tang phat hien"
+          },
+          "coco_class": {
+            "type": "string",
+            "title": "Coco Class",
+            "description": "Lop COCO: car, bus hoac truck"
+          }
+        },
+        "type": "object",
+        "required": [
+          "x1",
+          "y1",
+          "x2",
+          "y2",
+          "confidence",
+          "coco_class"
+        ],
+        "title": "BoundingBox",
+        "description": "Hop bao quanh mot chiec xe trong anh, don vi pixel."
+      },
+      "CarListResponse": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "Tong so xe khop dieu kien loc"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "cars": {
+            "items": {
+              "$ref": "#/components/schemas/CarSpecs"
+            },
+            "type": "array",
+            "title": "Cars"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "limit",
+          "offset",
+          "cars"
+        ],
+        "title": "CarListResponse",
+        "description": "Mot trang trong danh muc xe."
+      },
+      "CarSpecs": {
+        "properties": {
+          "class_id": {
+            "type": "integer",
+            "title": "Class Id",
+            "description": "So thu tu goc trong danh muc Stanford Cars (1-196). Khac voi `model_index` trong ket qua du doan."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name"
+          },
+          "brand": {
+            "type": "string",
+            "title": "Brand"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "body_style": {
+            "type": "string",
+            "title": "Body Style"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "seats": {
+            "type": "integer",
+            "title": "Seats"
+          },
+          "segment": {
+            "type": "string",
+            "title": "Segment"
+          },
+          "price_million_vnd": {
+            "type": "number",
+            "title": "Price Million Vnd",
+            "description": "Gia ban (trieu VND) — SO LIEU MO PHONG"
+          },
+          "fuel_l_per_100km": {
+            "type": "number",
+            "title": "Fuel L Per 100Km",
+            "description": "Muc tieu hao (L/100km) — SO LIEU MO PHONG"
+          }
+        },
+        "type": "object",
+        "required": [
+          "class_id",
+          "class_name",
+          "brand",
+          "model",
+          "body_style",
+          "year",
+          "seats",
+          "segment",
+          "price_million_vnd",
+          "fuel_l_per_100km"
+        ],
+        "title": "CarSpecs",
+        "description": "Thong so ky thuat cua mot dong xe."
+      },
+      "DetectedVehicle": {
+        "properties": {
+          "box": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BoundingBox"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Hop bao. Bang null khi khong phat hien duoc xe nao va he thong phan loai toan bo buc anh."
+          },
+          "predictions": {
+            "items": {
+              "$ref": "#/components/schemas/Prediction"
+            },
+            "type": "array",
+            "title": "Predictions"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "Mo hinh dua ra ket qua: 'international' (196 dong xe quoc te, doi <=2012) hoac 'vietnam' (20 dong xe thi truong VN, doi 2021-2024). He thong chay ca hai roi chon ket qua dang tin hon.",
+            "default": "international"
+          },
+          "is_confident": {
+            "type": "boolean",
+            "title": "Is Confident",
+            "description": "Ket qua co vuot nguong dang tin khong"
+          },
+          "specs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CarSpecs"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Thong so cua dong xe co kha nang nhat"
+          },
+          "similar_cars": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendedCar"
+            },
+            "type": "array",
+            "title": "Similar Cars",
+            "description": "Cac xe tuong tu (chi tra khi yeu cau)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "predictions",
+          "is_confident"
+        ],
+        "title": "DetectedVehicle",
+        "description": "Mot chiec xe da nhan dien, kem thong so va goi y."
+      },
+      "FilterOptions": {
+        "properties": {
+          "body_styles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Body Styles"
+          },
+          "segments": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Segments"
+          },
+          "price_min": {
+            "type": "number",
+            "title": "Price Min"
+          },
+          "price_max": {
+            "type": "number",
+            "title": "Price Max"
+          },
+          "seats_min": {
+            "type": "integer",
+            "title": "Seats Min"
+          },
+          "seats_max": {
+            "type": "integer",
+            "title": "Seats Max"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body_styles",
+          "segments",
+          "price_min",
+          "price_max",
+          "seats_min",
+          "seats_max"
+        ],
+        "title": "FilterOptions",
+        "description": "Cac gia tri hop le de dung khi loc — cho giao dien dung."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "HealthResponse",
+        "description": "Trang thai song cua dich vu."
+      },
+      "Prediction": {
+        "properties": {
+          "model_index": {
+            "type": "integer",
+            "title": "Model Index",
+            "description": "Chi so dau ra cua mo hinh (0-195). Day KHONG phai `class_id` trong bang thong so — hai he danh so khac nhau. Hay dung `class_name` de doi chieu giua hai noi."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_index",
+          "class_name",
+          "confidence"
+        ],
+        "title": "Prediction",
+        "description": "Mot kha nang ve dong xe, kem xac suat."
+      },
+      "ReadinessResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "models_loaded": {
+            "type": "boolean",
+            "title": "Models Loaded"
+          },
+          "car_count": {
+            "type": "integer",
+            "title": "Car Count"
+          },
+          "class_count": {
+            "type": "integer",
+            "title": "Class Count"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "models_loaded",
+          "car_count",
+          "class_count"
+        ],
+        "title": "ReadinessResponse",
+        "description": "Trang thai san sang phuc vu (da nap du mo hinh chua)."
+      },
+      "RecognitionResponse": {
+        "properties": {
+          "vehicle_count": {
+            "type": "integer",
+            "title": "Vehicle Count"
+          },
+          "likely_not_a_car": {
+            "type": "boolean",
+            "title": "Likely Not A Car",
+            "description": "True khi nhieu kha nang anh khong chua o to: vua khong phat hien duoc xe, vua phan loai khong chac chan."
+          },
+          "vehicles": {
+            "items": {
+              "$ref": "#/components/schemas/DetectedVehicle"
+            },
+            "type": "array",
+            "title": "Vehicles"
+          },
+          "processing_ms": {
+            "type": "number",
+            "title": "Processing Ms",
+            "description": "Thoi gian xu ly, mili giay"
+          }
+        },
+        "type": "object",
+        "required": [
+          "vehicle_count",
+          "likely_not_a_car",
+          "vehicles",
+          "processing_ms"
+        ],
+        "title": "RecognitionResponse",
+        "description": "Ket qua nhan dien cho mot buc anh."
+      },
+      "RecommendRequest": {
+        "properties": {
+          "max_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price",
+            "description": "Ngan sach toi da (trieu VND)"
+          },
+          "min_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price",
+            "description": "Gia toi thieu (trieu VND)"
+          },
+          "min_seats": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Seats",
+            "description": "So cho ngoi toi thieu"
+          },
+          "body_styles": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Styles",
+            "description": "Cac kieu dang chap nhan duoc"
+          },
+          "max_fuel": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Fuel",
+            "description": "Muc tieu hao toi da (L/100km)"
+          },
+          "top_n": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Top N",
+            "default": 5
+          }
+        },
+        "type": "object",
+        "title": "RecommendRequest",
+        "description": "Nhu cau cua nguoi dung de goi y xe.\n\nCac dieu kien la RANG BUOC CUNG: xe khong thoa man bi loai han khoi\nket qua, khong phai chi bi tru diem."
+      },
+      "RecommendResponse": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "cars": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendedCar"
+            },
+            "type": "array",
+            "title": "Cars"
+          }
+        },
+        "type": "object",
+        "required": [
+          "count",
+          "cars"
+        ],
+        "title": "RecommendResponse",
+        "description": "Danh sach xe phu hop voi nhu cau."
+      },
+      "RecommendedCar": {
+        "properties": {
+          "class_id": {
+            "type": "integer",
+            "title": "Class Id",
+            "description": "So thu tu goc trong danh muc Stanford Cars (1-196). Khac voi `model_index` trong ket qua du doan."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name"
+          },
+          "brand": {
+            "type": "string",
+            "title": "Brand"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "body_style": {
+            "type": "string",
+            "title": "Body Style"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "seats": {
+            "type": "integer",
+            "title": "Seats"
+          },
+          "segment": {
+            "type": "string",
+            "title": "Segment"
+          },
+          "price_million_vnd": {
+            "type": "number",
+            "title": "Price Million Vnd",
+            "description": "Gia ban (trieu VND) — SO LIEU MO PHONG"
+          },
+          "fuel_l_per_100km": {
+            "type": "number",
+            "title": "Fuel L Per 100Km",
+            "description": "Muc tieu hao (L/100km) — SO LIEU MO PHONG"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "description": "Diem phu hop, cang cao cang hop"
+          }
+        },
+        "type": "object",
+        "required": [
+          "class_id",
+          "class_name",
+          "brand",
+          "model",
+          "body_style",
+          "year",
+          "seats",
+          "segment",
+          "price_million_vnd",
+          "fuel_l_per_100km",
+          "score"
+        ],
+        "title": "RecommendedCar",
+        "description": "Xe duoc goi y, kem diem phu hop."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "description": "API key. Bo qua neu may chu khong bat xac thuc.",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

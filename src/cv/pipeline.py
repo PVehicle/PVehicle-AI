@@ -20,8 +20,15 @@ from src.utils import MODELS_DIR, get_logger
 logger = get_logger(__name__)
 
 DETECTOR_MODEL = MODELS_DIR / "yolov8n.onnx"
+
+# Mo hinh 1: xe quoc te (Stanford Cars, 196 lop, doi <=2012).
 CLASSIFIER_MODEL = MODELS_DIR / "car_classifier.onnx"
 CLASS_NAMES_FILE = MODELS_DIR / "class_names.json"
+
+# Mo hinh 2: xe thi truong Viet Nam (20 lop, doi 2021-2024).
+# Tuy chon — thieu file nay thi he thong van chay voi mo hinh 1.
+VN_CLASSIFIER_MODEL = MODELS_DIR / "vn_car_classifier.onnx"
+VN_CLASS_NAMES_FILE = MODELS_DIR / "vn_class_names.json"
 
 # Noi rong hop bao truoc khi crop, giong luc huan luyen (xem notebook).
 CROP_PADDING = 0.08
@@ -34,6 +41,28 @@ CROP_PADDING = 0.08
 # truong hop do de bao "khong nhan ra" thay vi doan bua.
 MIN_CONFIDENCE = 0.15
 
+# He so phat khi so sanh do tin cay giua hai mo hinh khac so lop.
+#
+# Mo hinh xe VN chi co 20 lop, mo hinh quoc te co 196 lop. Voi cung mot
+# muc "chac chan", mo hinh it lop luon cho xac suat cao hon — doan mo o
+# 20 lop la 5%, o 196 lop chi 0.5%. So sanh truc tiep se luon thien vi
+# mo hinh VN.
+#
+# Gia tri 0.40 chon sau khi do tren 326 anh xe VN + 18 anh xe quoc te.
+# Khong co he so nao tot cho ca hai chieu — day la mot danh doi that:
+#
+#   He so   VN top-1   QT top-1
+#    0.30     47.5%      55.6%
+#    0.40     54.6%      55.6%   <- can bang nhat
+#    0.75     67.8%      44.4%
+#    1.00     70.9%      38.9%
+#
+# 0.40 cho hai chieu gan bang nhau. Tu 0.50 tro len, xe quoc te tut nhanh
+# vi mo hinh VN thang o qua nhieu truong hop.
+#
+# Xem docs/dual_model.md muc 2.
+VN_CONFIDENCE_PENALTY = 0.40
+
 
 @dataclass(frozen=True)
 class RecognitionResult:
@@ -42,6 +71,14 @@ class RecognitionResult:
     detection: Detection | None
     predictions: list[Prediction]
     crop: np.ndarray
+
+    # Mo hinh nao dua ra ket qua nay: "international" (Stanford Cars,
+    # 196 lop) hoac "vietnam" (20 lop xe thi truong VN).
+    source: str = "international"
+
+    # Ket qua cua mo hinh CON LAI, de nguoi dung doi chieu khi can.
+    # None khi chi chay mot mo hinh.
+    alternative: list[Prediction] | None = None
 
     @property
     def best(self) -> Prediction:
@@ -80,9 +117,67 @@ class RecognitionPipeline:
         detector_path: Path = DETECTOR_MODEL,
         classifier_path: Path = CLASSIFIER_MODEL,
         labels_path: Path = CLASS_NAMES_FILE,
+        vn_classifier_path: Path = VN_CLASSIFIER_MODEL,
+        vn_labels_path: Path = VN_CLASS_NAMES_FILE,
     ) -> None:
         self.detector = VehicleDetector(detector_path)
         self.classifier = CarClassifier(classifier_path, labels_path)
+
+        # Mo hinh xe Viet Nam la TUY CHON: thieu file thi he thong van
+        # chay binh thuong voi mo hinh quoc te.
+        self.vn_classifier: CarClassifier | None = None
+        if vn_classifier_path.exists() and vn_labels_path.exists():
+            self.vn_classifier = CarClassifier(
+                vn_classifier_path, vn_labels_path, expected_classes=None
+            )
+        else:
+            logger.info(
+                "Khong co mo hinh xe Viet Nam, chi dung mo hinh quoc te."
+            )
+
+    def _classify(
+        self, image: np.ndarray, top_k: int
+    ) -> tuple[list[Prediction], str, list[Prediction] | None]:
+        """Phan loai bang ca hai mo hinh, chon ket qua cua MOT mo hinh.
+
+        Hai mo hinh phu hai tap xe gan nhu khong giao nhau (quoc te doi
+        <=2012, Viet Nam doi 2021-2024). Mo hinh nao tu tin hon thi lay
+        TRON top-k cua mo hinh do.
+
+        ## Vi sao khong gop chung danh sach
+
+        Da thu gop (tron top-k cua hai mo hinh roi xep hang chung) va do
+        tren 18 anh xe quoc te + 326 anh xe VN:
+
+            Cach lam            QT top-1   VN top-1
+            Chi mo hinh QT        61.1%       --
+            Gop, phat 0.75        44.4%     67.8%
+            Gop, phat 0.40        55.6%     54.6%
+            Chon mot mo hinh      61.1%     67.8%
+
+        Gop luon lam xe quoc te te di, vi cac lop xe VN vo nghia chen vao
+        top-5 (o he so 0.75, 67.8% o trong top-5 cua anh xe quoc te bi xe
+        VN chiem). Ha he so phat thi lai lam hong chieu nguoc lai.
+
+        Chon mot mo hinh giu duoc do chinh xac tot nhat ca hai chieu.
+
+        ## Van de khi so sanh xac suat
+
+        Xac suat cua hai mo hinh khong so sanh truc tiep duoc: doan mo o
+        20 lop cho 5%, o 196 lop chi cho 0.5%. Nhan xac suat cua mo hinh
+        VN voi VN_CONFIDENCE_PENALTY truoc khi so.
+        """
+        primary = self.classifier.predict(image, top_k=top_k)
+
+        if self.vn_classifier is None:
+            return primary, "international", None
+
+        vn_predictions = self.vn_classifier.predict(image, top_k=top_k)
+        vn_score = vn_predictions[0].confidence * VN_CONFIDENCE_PENALTY
+
+        if vn_score > primary[0].confidence:
+            return vn_predictions, "vietnam", primary
+        return primary, "international", vn_predictions
 
     def recognize(
         self, image: np.ndarray, top_k: int = 5, max_vehicles: int = 5
@@ -96,10 +191,13 @@ class RecognitionPipeline:
         if not detections:
             # Khong tim thay xe: coi ca buc anh la vung can phan loai.
             logger.info("Khong phat hien xe, phan loai toan bo anh.")
+            predictions, source, alternative = self._classify(image, top_k)
             return [RecognitionResult(
                 detection=None,
-                predictions=self.classifier.predict(image, top_k=top_k),
+                predictions=predictions,
                 crop=image,
+                source=source,
+                alternative=alternative,
             )]
 
         results = []
@@ -107,10 +205,13 @@ class RecognitionPipeline:
             crop = detection.crop(image, padding=CROP_PADDING)
             if crop.size == 0:
                 continue
+            predictions, source, alternative = self._classify(crop, top_k)
             results.append(RecognitionResult(
                 detection=detection,
-                predictions=self.classifier.predict(crop, top_k=top_k),
+                predictions=predictions,
                 crop=crop,
+                source=source,
+                alternative=alternative,
             ))
         return results
 

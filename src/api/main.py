@@ -26,6 +26,9 @@ logger = get_logger(__name__)
 
 settings = get_settings()
 
+# Han muc tinh theo phut nen cho 60 giay la chac chan het cua so.
+RETRY_AFTER_SECONDS = 60
+
 DESCRIPTION = """
 REST API cho he thong nhan dien va tu van o to.
 
@@ -70,6 +73,10 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
+    # Trinh duyet chi cho JavaScript doc mot so header co ban. Muon
+    # frontend doc duoc X-Request-ID (de bao loi kem ma tra cuu) thi
+    # phai khai bao o day, neu khong header van ve nhung bi an di.
+    expose_headers=["X-Request-ID", "Retry-After"],
 )
 
 
@@ -89,13 +96,18 @@ async def add_request_id(request: Request, call_next):
 
 @app.exception_handler(RateLimitExceeded)
 async def handle_rate_limit(request: Request, exc: RateLimitExceeded):
-    """Tra loi ro rang khi vuot han muc goi."""
+    """Tra loi ro rang khi vuot han muc goi.
+
+    Kem header `Retry-After` de client biet cho bao lau — slowapi khong
+    tu them header nay.
+    """
     return JSONResponse(
         status_code=status.HTTP_429_TOO_MANY_REQUESTS,
         content={
             "detail": f"Vuot qua gioi han toc do: {exc.detail}.",
             "request_id": getattr(request.state, "request_id", None),
         },
+        headers={"Retry-After": str(RETRY_AFTER_SECONDS)},
     )
 
 

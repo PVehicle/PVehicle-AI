@@ -172,7 +172,10 @@ def render_recognition_tab(pipeline, recommender) -> None:
         st.image(
             to_rgb(draw_detections(image, results)),
             caption="Ket qua nhan dien",
-            use_container_width=True,
+            # st.image dung `use_column_width`, KHONG phai
+            # `use_container_width` nhu cac widget khac. Tham so moi chi
+            # co tu Streamlit 1.41, trong khi du an ghim ban 1.39.
+            use_column_width=True,
         )
 
     with right:
@@ -204,7 +207,7 @@ def render_single_result(result, recommender) -> None:
     crop_col, info_col = st.columns([1, 2])
 
     with crop_col:
-        st.image(to_rgb(result.crop), use_container_width=True)
+        st.image(to_rgb(result.crop), use_column_width=True)
 
     with info_col:
         if not result.is_confident:

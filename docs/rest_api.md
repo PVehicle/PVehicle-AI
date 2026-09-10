@@ -153,6 +153,13 @@ Mọi lỗi trả về cùng khuôn dạng:
 `request_id` cũng nằm trong header `X-Request-ID` của mọi response — dùng
 nó để tra log khi cần hỗ trợ.
 
+Khi gặp **429**, response kèm header `Retry-After` (giây) cho biết nên chờ
+bao lâu.
+
+> Cả hai header đều được khai báo trong `Access-Control-Expose-Headers`,
+> nên JavaScript ở frontend đọc được. Thiếu khai báo này thì trình duyệt
+> vẫn nhận header nhưng **giấu khỏi JavaScript**.
+
 ## 7. Các quyết định kỹ thuật
 
 ### ONNX Runtime không an toàn đa luồng

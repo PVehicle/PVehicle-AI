@@ -45,3 +45,6 @@ desktop.ini
 
 # Ket qua danh gia (sinh tu checkpoint, khong day len git)
 reports/
+
+# File nen de tai len Colab (sinh lai duoc)
+vn_cars.zip

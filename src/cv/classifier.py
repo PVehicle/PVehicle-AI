@@ -48,7 +48,18 @@ def _softmax(logits: np.ndarray) -> np.ndarray:
 class CarClassifier:
     """Phan loai dong xe tu anh da crop."""
 
-    def __init__(self, model_path: Path, labels_path: Path) -> None:
+    def __init__(
+        self,
+        model_path: Path,
+        labels_path: Path,
+        expected_classes: int | None = EXPECTED_NUM_CLASSES,
+    ) -> None:
+        """Nap mo hinh phan loai.
+
+        `expected_classes` de kiem tra file nhan co dung so lop khong.
+        Truyen None de bo qua — dung cho cac mo hinh co so lop khac
+        (vi du mo hinh xe Viet Nam).
+        """
         if not model_path.exists():
             raise FileNotFoundError(
                 f"Khong tim thay mo hinh phan loai: {model_path}. "
@@ -64,10 +75,13 @@ class CarClassifier:
         self.class_names: list[str] = json.loads(
             labels_path.read_text(encoding="utf-8")
         )
-        if len(self.class_names) != EXPECTED_NUM_CLASSES:
+        if (
+            expected_classes is not None
+            and len(self.class_names) != expected_classes
+        ):
             raise ValueError(
                 f"File nhan co {len(self.class_names)} lop, "
-                f"ky vong {EXPECTED_NUM_CLASSES}."
+                f"ky vong {expected_classes}."
             )
 
         self.session = ort.InferenceSession(
