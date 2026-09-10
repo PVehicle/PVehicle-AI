@@ -26,26 +26,62 @@ VN**.
 ### Giải pháp: hệ số phạt
 
 ```python
-VN_CONFIDENCE_PENALTY = 0.75
+VN_CONFIDENCE_PENALTY = 0.40
 
 vn_score = vn_predictions[0].confidence * VN_CONFIDENCE_PENALTY
 if vn_score > international[0].confidence:
     chọn mô hình VN
 ```
 
-Giá trị 0.75 chọn theo kinh nghiệm: đủ bù chênh lệch số lớp, nhưng không
-làm mất ưu thế của mô hình VN khi nó thực sự nhận ra xe.
+### Chọn hệ số bằng đo đạc
 
-### Ví dụ thực tế
+Đo trên **326 ảnh xe VN** (tập test) + **18 ảnh xe quốc tế** (Wikimedia,
+các dòng có trong Stanford Cars):
+
+| Hệ số | VN top-1 | QT top-1 | Trung bình |
+| ---: | ---: | ---: | ---: |
+| 0.20 | 32.5% | 55.6% | 44.0% |
+| 0.30 | 47.5% | 55.6% | 51.6% |
+| **0.40** | **54.6%** | **55.6%** | **55.1%** |
+| 0.50 | 60.1% | 50.0% | 55.1% |
+| 0.75 | 67.8% | 44.4% | 56.1% |
+| 1.00 | 70.9% | 38.9% | 54.9% |
+
+**Không có hệ số nào tốt cho cả hai chiều** — đây là đánh đổi thật, không
+phải vấn đề tinh chỉnh. Chọn **0.40** vì hai chiều gần bằng nhau (54.6% và
+55.6%). Từ 0.50 trở lên, xe quốc tế tụt nhanh.
+
+> ⚠️ Tập test xe quốc tế chỉ có **18 ảnh** — quá nhỏ để kết luận chắc
+> chắn. Xu hướng rõ nhưng con số cụ thể có sai số lớn. Nếu có thời gian
+> nên tải thêm ~100 ảnh rồi đo lại.
+
+### Vì sao không gộp chung danh sách
+
+Đã thử gộp (trộn top-k của hai mô hình rồi xếp hạng chung) và đo:
+
+| Cách làm | QT top-1 | VN top-1 |
+| :--- | ---: | ---: |
+| Chỉ mô hình quốc tế | **61.1%** | — |
+| Gộp, phạt 0.75 | 44.4% | 67.8% |
+| Gộp, phạt 0.40 | 55.6% | 54.6% |
+| **Chọn một mô hình, phạt 0.40** | **55.6%** | **54.6%** |
+
+Gộp luôn làm xe quốc tế tệ đi vì các lớp xe VN vô nghĩa chèn vào top-5 —
+ở hệ số 0.75, **67.8% ô trong top-5 của ảnh xe quốc tế bị xe VN chiếm**.
+
+Ví dụ thật: ảnh 4 xe thể thao (Alfa Romeo, Audi RS5, BMW M4, Mercedes)
+khi gộp cho ra Hyundai Accent, Toyota Yaris, Toyota Vios, Ferrari 458 —
+**3/4 là xe Việt Nam**, sai hoàn toàn.
+
+### Ví dụ hoạt động đúng
 
 | Ảnh | Quốc tế | Việt Nam | Sau phạt | Chọn |
 | :--- | ---: | ---: | ---: | :--- |
-| VinFast VF 8 | 13.39% (Bugatti) | 42.64% (VF 8) | 31.98% | **VN** ✅ |
-| Toyota Vios | 22.68% (Kizashi) | 32.13% (Innova) | 24.09% | **VN** |
-| Hyundai Accent 2024 | 90.04% (Accent 2012) | 16.67% (Yaris) | 12.50% | **Quốc tế** ✅ |
+| VinFast VF 8 | 13.39% (Bugatti) | 42.64% (VF 8) | 17.06% | **VN** ✅ |
+| Hyundai Accent 2024 | 90.04% (Accent 2012) | 16.67% (Yaris) | 6.67% | **Quốc tế** ✅ |
 
 Trường hợp Accent đáng chú ý: mô hình quốc tế **vừa tự tin hơn vừa đúng**
-(đúng hãng, đúng dòng, chỉ khác đời). Cơ chế chọn hoạt động đúng.
+(đúng hãng, đúng dòng, chỉ khác đời).
 
 ## 3. Kết quả trong response
 
@@ -56,8 +92,9 @@ Mỗi kết quả nhận diện mang thêm hai trường:
 | `source` | `"international"` hoặc `"vietnam"` |
 | `alternative` | Dự đoán của mô hình còn lại, để đối chiếu |
 
-Giao diện hiển thị nhãn 🌍 hoặc 🇻🇳, kèm mục có thể mở ra xem mô hình kia
-đoán gì. CLI in `[quoc te]` hoặc `[xe VN]`. API trả trường `source`.
+Giao diện **không hiển thị** nguồn mô hình — người dùng chỉ cần kết quả,
+không cần biết mô hình nào đưa ra. Hai trường này dùng cho thống kê, gỡ
+lỗi, và API (client có thể tự quyết cách hiển thị).
 
 ## 4. Mô hình VN là tùy chọn
 
@@ -140,6 +177,11 @@ kết quả 100% không có ý nghĩa thống kê.
 **Chỉ 20/50 lớp đã thu thập.** Còn thiếu Mitsubishi, Ford, Mazda, Kia,
 Suzuki, Nissan, Subaru, Isuzu, MG và 3/4 dòng Honda.
 
-**Hệ số phạt 0.75 chọn theo kinh nghiệm**, chưa tối ưu bằng thực nghiệm có
-hệ thống. Nếu có thời gian nên quét thử nhiều giá trị trên một tập ảnh đại
-diện.
+**Tập test xe quốc tế quá nhỏ.** Chỉ 18 ảnh — hệ số 0.40 chọn dựa trên số
+liệu này nên có sai số lớn. Nên tải thêm ~100 ảnh xe có trong Stanford Cars
+rồi đo lại.
+
+**Không có hệ số nào tốt cho cả hai chiều.** Đây là hạn chế cố hữu của việc
+chạy hai mô hình độc lập trên cùng một ảnh. Cách giải quyết triệt để là
+train một mô hình duy nhất phủ cả hai tập xe — nhưng phải train lại từ đầu
+và mất cân bằng lớp sẽ nặng hơn.

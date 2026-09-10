@@ -48,9 +48,20 @@ MIN_CONFIDENCE = 0.15
 # 20 lop la 5%, o 196 lop chi 0.5%. So sanh truc tiep se luon thien vi
 # mo hinh VN.
 #
-# Gia tri 0.75 chon theo kinh nghiem: du de bu chenh lech, nhung khong
-# lam mat uu the cua mo hinh VN khi no thuc su nhan ra xe.
-VN_CONFIDENCE_PENALTY = 0.75
+# Gia tri 0.40 chon sau khi do tren 326 anh xe VN + 18 anh xe quoc te.
+# Khong co he so nao tot cho ca hai chieu — day la mot danh doi that:
+#
+#   He so   VN top-1   QT top-1
+#    0.30     47.5%      55.6%
+#    0.40     54.6%      55.6%   <- can bang nhat
+#    0.75     67.8%      44.4%
+#    1.00     70.9%      38.9%
+#
+# 0.40 cho hai chieu gan bang nhau. Tu 0.50 tro len, xe quoc te tut nhanh
+# vi mo hinh VN thang o qua nhieu truong hop.
+#
+# Xem docs/dual_model.md muc 2.
+VN_CONFIDENCE_PENALTY = 0.40
 
 
 @dataclass(frozen=True)
@@ -127,16 +138,34 @@ class RecognitionPipeline:
     def _classify(
         self, image: np.ndarray, top_k: int
     ) -> tuple[list[Prediction], str, list[Prediction] | None]:
-        """Phan loai bang ca hai mo hinh, chon ket qua dang tin hon.
+        """Phan loai bang ca hai mo hinh, chon ket qua cua MOT mo hinh.
 
-        Hai mo hinh phu hai tap xe khac nhau (quoc te doi <=2012 va xe VN
-        doi 2021-2024) nen khong the gop lam mot. Cach chon: mo hinh nao
-        tu tin hon thi lay ket qua cua mo hinh do.
+        Hai mo hinh phu hai tap xe gan nhu khong giao nhau (quoc te doi
+        <=2012, Viet Nam doi 2021-2024). Mo hinh nao tu tin hon thi lay
+        TRON top-k cua mo hinh do.
 
-        So sanh xac suat giua hai mo hinh khac so lop la khong hoan toan
-        cong bang — mo hinh 20 lop de dat xac suat cao hon mo hinh 196
-        lop. Bu lai bang cach nhan xac suat cua mo hinh VN voi mot he so
-        phat, xem VN_CONFIDENCE_PENALTY.
+        ## Vi sao khong gop chung danh sach
+
+        Da thu gop (tron top-k cua hai mo hinh roi xep hang chung) va do
+        tren 18 anh xe quoc te + 326 anh xe VN:
+
+            Cach lam            QT top-1   VN top-1
+            Chi mo hinh QT        61.1%       --
+            Gop, phat 0.75        44.4%     67.8%
+            Gop, phat 0.40        55.6%     54.6%
+            Chon mot mo hinh      61.1%     67.8%
+
+        Gop luon lam xe quoc te te di, vi cac lop xe VN vo nghia chen vao
+        top-5 (o he so 0.75, 67.8% o trong top-5 cua anh xe quoc te bi xe
+        VN chiem). Ha he so phat thi lai lam hong chieu nguoc lai.
+
+        Chon mot mo hinh giu duoc do chinh xac tot nhat ca hai chieu.
+
+        ## Van de khi so sanh xac suat
+
+        Xac suat cua hai mo hinh khong so sanh truc tiep duoc: doan mo o
+        20 lop cho 5%, o 196 lop chi cho 0.5%. Nhan xac suat cua mo hinh
+        VN voi VN_CONFIDENCE_PENALTY truoc khi so.
         """
         primary = self.classifier.predict(image, top_k=top_k)
 

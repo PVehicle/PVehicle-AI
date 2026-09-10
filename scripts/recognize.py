@@ -80,10 +80,7 @@ def print_result(
                 f"conf={detection.confidence:.0%} "
                 f"loai={detection.class_name}"
             )
-        model_tag = (
-            "[xe VN]" if result.source == "vietnam" else "[quoc te]"
-        )
-        print(f"Xe {index}: {model_tag} {where}")
+        print(f"Xe {index}: {where}")
 
         if not result.is_confident:
             print(f"  (do tin cay chi {result.best.confidence:.1%} — "
