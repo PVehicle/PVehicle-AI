@@ -67,6 +67,54 @@ class TestHealthEndpoints(unittest.TestCase):
 
 
 @unittest.skipUnless(API_AVAILABLE, "Chua cai fastapi/httpx")
+class TestCorsForBrowser(unittest.TestCase):
+    """Kiem tra CORS du de trinh duyet goi duoc.
+
+    Frontend chay o cong khac backend (Angular 4200, API 8000) nen moi
+    request deu la cross-origin. Thieu cau hinh CORS thi trinh duyet chan,
+    ma loi chi hien trong console — khong lo ra o phia backend.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.client = TestClient(app)
+        cls.client.__enter__()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.client.__exit__(None, None, None)
+
+    def test_preflight_cho_phep_post(self):
+        """Trinh duyet gui OPTIONS truoc khi POST multipart."""
+        response = self.client.options(
+            "/api/v1/recognize",
+            headers={
+                "Origin": "http://localhost:4200",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "x-api-key",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        allowed = response.headers.get("access-control-allow-methods", "")
+        self.assertIn("POST", allowed)
+
+    def test_expose_header_de_frontend_doc_duoc(self):
+        """X-Request-ID phai duoc expose, khong thi JavaScript khong doc
+        duoc du header van ve trong response."""
+        response = self.client.get(
+            "/health", headers={"Origin": "http://localhost:4200"}
+        )
+        exposed = response.headers.get(
+            "access-control-expose-headers", ""
+        )
+        self.assertIn("X-Request-ID", exposed)
+
+    def test_co_header_request_id(self):
+        response = self.client.get("/health")
+        self.assertIn("X-Request-ID", response.headers)
+
+
+@unittest.skipUnless(API_AVAILABLE, "Chua cai fastapi/httpx")
 class TestCarsEndpoints(unittest.TestCase):
     """Endpoint tra cuu danh muc — khong phu thuoc mo hinh ONNX."""
 

@@ -610,6 +610,193 @@ export class DetectionOverlayComponent {
 
 ---
 
+## 7b. Chạy cả frontend và backend trên máy local
+
+Đây là kịch bản phát triển thông thường: hai tiến trình chạy song song ở
+hai cổng khác nhau.
+
+```text
+Backend  (FastAPI)  → http://localhost:8000
+Frontend (Angular)  → http://localhost:4200
+```
+
+### Khởi động backend
+
+```powershell
+cd <thư mục PVehicle-AI>
+.\.venv\Scripts\python.exe -m uvicorn src.api.main:app --reload
+```
+
+Kiểm tra: <http://localhost:8000/docs>
+
+### Khởi động frontend
+
+```bash
+cd pvehicle-web
+ng serve
+```
+
+### CORS đã cấu hình sẵn
+
+Backend mặc định `PVEHICLE_CORS_ORIGINS=*` nên frontend gọi được ngay,
+**không cần cấu hình gì thêm**.
+
+Đã kiểm chứng thực tế preflight từ origin `http://localhost:4200`:
+
+```text
+HTTP/1.1 200 OK
+access-control-allow-origin: *
+access-control-allow-methods: GET, POST
+access-control-allow-headers: x-api-key
+access-control-expose-headers: X-Request-ID, Retry-After
+```
+
+> Cổng khác nhau (4200 vs 8000) là **cross-origin**, kể cả khi cùng
+> `localhost`. Mọi request đều qua CORS.
+
+### Hai header frontend đọc được
+
+| Header | Dùng khi nào |
+| :--- | :--- |
+| `X-Request-ID` | Hiển thị kèm thông báo lỗi để tra log |
+| `Retry-After` | Khi gặp 429, cho biết chờ bao nhiêu giây |
+
+Backend khai báo `Access-Control-Expose-Headers` cho hai header này —
+không có khai báo đó thì JavaScript **không đọc được** dù header vẫn về.
+
+```typescript
+// core/error.interceptor.ts
+export const errorInterceptor: HttpInterceptorFn = (req, next) =>
+  next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+      const requestId = error.headers.get('X-Request-ID');
+
+      if (error.status === 429) {
+        const seconds = Number(error.headers.get('Retry-After') ?? 60);
+        return throwError(() => new ApiError(
+          `Bạn thao tác quá nhanh. Thử lại sau ${seconds} giây.`,
+          requestId,
+        ));
+      }
+
+      return throwError(() => new ApiError(
+        error.error?.detail ?? 'Có lỗi xảy ra',
+        requestId,
+      ));
+    }),
+  );
+```
+
+### Hai cách nối frontend với backend
+
+#### Cách A — gọi thẳng (đơn giản, khuyến nghị)
+
+```typescript
+// environments/environment.development.ts
+export const environment = {
+  apiBaseUrl: 'http://localhost:8000',
+};
+
+// environments/environment.ts  (bản production)
+export const environment = {
+  apiBaseUrl: '',   // cùng domain, dùng đường dẫn tương đối
+};
+```
+
+#### Cách B — dùng proxy của Angular CLI
+
+Frontend gọi `/api/...` như thể cùng domain, CLI chuyển tiếp sang backend.
+Tránh CORS hoàn toàn và **giống môi trường production hơn**.
+
+```json
+// proxy.conf.json
+{
+  "/api": {
+    "target": "http://localhost:8000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/health": { "target": "http://localhost:8000", "secure": false },
+  "/ready": { "target": "http://localhost:8000", "secure": false }
+}
+```
+
+```json
+// angular.json → projects.<tên>.architect.serve.options
+"proxyConfig": "proxy.conf.json"
+```
+
+Khi đó `apiBaseUrl` để rỗng ở cả hai môi trường.
+
+> Chọn cách nào cũng được. Cách A dễ gỡ lỗi hơn (thấy rõ URL thật trong
+> tab Network), cách B khớp với production hơn.
+
+### Giới hạn tốc độ khi phát triển
+
+Mặc định **20 lần/phút** cho nhận diện — dễ chạm khi thử liên tục. Nới ra
+bằng biến môi trường:
+
+```powershell
+$env:PVEHICLE_RATE_LIMIT_RECOGNIZE = "200/minute"
+$env:PVEHICLE_RATE_LIMIT_DEFAULT = "600/minute"
+.\.venv\Scripts\python.exe -m uvicorn src.api.main:app --reload
+```
+
+Hoặc đặt trong file `.env` của backend.
+
+### Backend chưa sẵn sàng
+
+Suy luận nạp mô hình mất vài giây khi khởi động. Trong lúc đó `/ready` trả
+**503**.
+
+Frontend nên gọi `/ready` lúc khởi động và hiển thị trạng thái phù hợp
+thay vì để người dùng bấm rồi gặp lỗi.
+
+```typescript
+// core/health.store.ts
+export const HealthStore = signalStore(
+  { providedIn: 'root' },
+  withState({ ready: false, carCount: 0, checked: false }),
+  withMethods((store, api = inject(ApiService)) => ({
+    async check(): Promise<void> {
+      try {
+        const health = await firstValueFrom(api.ready());
+        patchState(store, {
+          ready: health.models_loaded,
+          carCount: health.car_count,
+          checked: true,
+        });
+      } catch {
+        // 503 cũng vào đây — backend chạy nhưng chưa nạp xong mô hình.
+        patchState(store, { ready: false, checked: true });
+      }
+    },
+  })),
+);
+```
+
+### Các lỗi thường gặp
+
+| Triệu chứng | Nguyên nhân | Cách sửa |
+| :--- | :--- | :--- |
+| `ERR_CONNECTION_REFUSED` | Backend chưa chạy | Khởi động uvicorn |
+| Lỗi CORS trong console | Sai `apiBaseUrl` (thiếu `http://`) | Kiểm tra environment |
+| 503 ở `/recognize` | Thiếu file trong `models/` | Xem `docs/dual_model.md` |
+| 429 liên tục | Chạm giới hạn tốc độ | Nới bằng biến môi trường |
+| `error.headers.get()` trả `null` | Header chưa được expose | Backend đã sửa — cập nhật code mới nhất |
+| Ảnh tải lên báo 415 | Định dạng không hỗ trợ | Kiểm tra ở client trước khi gửi |
+
+### Khi triển khai thật
+
+Cấu hình lại CORS cho đúng tên miền, không để `*`:
+
+```bash
+PVEHICLE_CORS_ORIGINS=https://ten-mien-cua-ban.com
+PVEHICLE_API_KEYS=<key sinh ngẫu nhiên>
+```
+
+---
+
 ## 8. Khởi tạo dự án
 
 ```bash
