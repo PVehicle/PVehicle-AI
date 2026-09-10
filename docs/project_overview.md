@@ -248,6 +248,7 @@ biểu đồ loss/accuracy, cùng các chỉ số tổng hợp — dán thẳng 
 | `cli_and_benchmark.md` | Công cụ dòng lệnh và đo hiệu năng |
 | `ket_qua_danh_gia.md` | **Kết quả đánh giá hệ thống** |
 | `dual_model.md` | **Hệ thống hai mô hình phân loại** |
+| `frontend/README.md` | **Đặc tả frontend (Angular)** |
 
 ## 9. Trích dẫn
 

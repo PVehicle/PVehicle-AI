@@ -289,6 +289,7 @@ Chi tiết quy tắc sinh: `docs/car_specs_generation.md`.
 | `docs/onnx_vs_pandas.md` | So sánh hiệu năng hai bản tư vấn |
 | `docs/ket_qua_danh_gia.md` | **Kết quả đánh giá hệ thống** |
 | `docs/dual_model.md` | **Hệ thống hai mô hình phân loại** |
+| `docs/frontend/README.md` | **Đặc tả frontend (Angular)** |
 
 ---
 
