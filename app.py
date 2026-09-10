@@ -235,7 +235,12 @@ def render_single_result(result, recommender) -> None:
                 "xe quoc te" if result.source == "vietnam"
                 else "xe Viet Nam"
             )
-            with st.expander(f"Mo hinh {other} doan gi?"):
+            # Dung popover chu KHONG dung expander: ham nay duoc goi tu
+            # ben trong mot expander, ma Streamlit cam long expander.
+            with st.popover(f"Mo hinh {other} doan gi?"):
+                st.caption(
+                    "Ket qua cua mo hinh con lai, de doi chieu:"
+                )
                 for prediction in result.alternative[:3]:
                     st.write(
                         f"- {prediction.class_name} — "

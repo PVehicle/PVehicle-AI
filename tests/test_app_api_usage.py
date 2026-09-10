@@ -122,5 +122,92 @@ class TestStreamlitApiUsage(unittest.TestCase):
             )
 
 
+class TestKhongLongExpander(unittest.TestCase):
+    """Streamlit cam long expander trong expander.
+
+    Loi nay chi bao khi nguoi dung mo dung nhanh giao dien do:
+      StreamlitAPIException: Expanders may not be nested inside other
+      expanders.
+
+    Kiem tra bang cach lan theo loi goi ham: neu mot ham chua expander
+    va duoc goi tu ben trong mot expander khac, do la loi.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        source = APP_FILE.read_text(encoding="utf-8")
+        cls.tree = ast.parse(source)
+
+    @staticmethod
+    def _expander_nodes(node: ast.AST) -> list[ast.With]:
+        """Tim cac khoi `with st.expander(...)` trong mot nhanh cay."""
+        found = []
+        for child in ast.walk(node):
+            if not isinstance(child, ast.With):
+                continue
+            for item in child.items:
+                call = item.context_expr
+                if (
+                    isinstance(call, ast.Call)
+                    and isinstance(call.func, ast.Attribute)
+                    and call.func.attr == "expander"
+                    and isinstance(call.func.value, ast.Name)
+                    and call.func.value.id == "st"
+                ):
+                    found.append(child)
+        return found
+
+    def _functions_with_expander(self) -> set[str]:
+        """Ten cac ham co chua st.expander."""
+        names = set()
+        for node in ast.walk(self.tree):
+            if isinstance(node, ast.FunctionDef):
+                if self._expander_nodes(node):
+                    names.add(node.name)
+        return names
+
+    def test_khong_goi_ham_chua_expander_tu_trong_expander(self):
+        producers = self._functions_with_expander()
+        problems = []
+
+        for node in ast.walk(self.tree):
+            if not isinstance(node, ast.FunctionDef):
+                continue
+            for expander in self._expander_nodes(node):
+                # Trong than cua expander nay co goi ham nao cung tao
+                # expander khong?
+                for inner in ast.walk(expander):
+                    if not isinstance(inner, ast.Call):
+                        continue
+                    if isinstance(inner.func, ast.Name):
+                        called = inner.func.id
+                    elif isinstance(inner.func, ast.Attribute):
+                        called = inner.func.attr
+                    else:
+                        continue
+                    if called in producers:
+                        problems.append(
+                            f"app.py:{inner.lineno} — goi {called}() "
+                            "tu trong st.expander, ma ham do cung tao "
+                            "expander (Streamlit cam long nhau)"
+                        )
+
+        self.assertEqual(
+            problems, [],
+            "Long expander trong expander:\n  " + "\n  ".join(problems),
+        )
+
+    def test_khong_long_expander_truc_tiep(self):
+        """Truong hop hien nhien: expander viet long ngay trong nhau."""
+        problems = []
+        for outer in self._expander_nodes(self.tree):
+            for child in ast.iter_child_nodes(outer):
+                for inner in self._expander_nodes(child):
+                    if inner is not outer:
+                        problems.append(f"app.py:{inner.lineno}")
+
+        self.assertEqual(problems, [], f"Expander long nhau: {problems}")
+
+
 if __name__ == "__main__":
     unittest.main()
