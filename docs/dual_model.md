@@ -177,6 +177,27 @@ kết quả 100% không có ý nghĩa thống kê.
 **Chỉ 20/50 lớp đã thu thập.** Còn thiếu Mitsubishi, Ford, Mazda, Kia,
 Suzuki, Nissan, Subaru, Isuzu, MG và 3/4 dòng Honda.
 
+**Ba lớp không xác định được đời xe.** Bộ lọc theo năm chỉ bắt được ảnh có
+năm dạng 4 chữ số trong tên file. Wikimedia còn dùng dạng viết tắt
+(`'00-'02`, `03-'06`) và rất nhiều ảnh không ghi năm.
+
+Hậu quả nặng nhất ở lớp `Hyundai Accent Sedan 2024`: chỉ **5% ảnh đúng
+đời**, còn lại là Accent 2006-2014 (phần lớn là hatchback). Mô hình vì thế
+không nhận ra Accent 2024 thật.
+
+Ba lớp đã được **đổi tên bỏ năm** cho trung thực với dữ liệu:
+
+| Tên cũ | Tên mới | Ảnh đúng đời |
+| :--- | :--- | ---: |
+| Hyundai Accent Sedan 2024 | `Hyundai Accent Sedan` | 5% |
+| Toyota Vios Sedan 2023 | `Toyota Vios Sedan` | 67% |
+| Honda City Sedan 2023 | `Honda City Sedan` | 69% |
+
+17 lớp còn lại đạt 80-100% đúng đời nên giữ nguyên tên.
+
+> Đổi tên **không cần train lại** — chỉ đổi nhãn hiển thị, thứ tự lớp giữ
+> nguyên. Chạy `scripts/rename_mixed_year_classes.py` để áp dụng.
+
 **Tập test xe quốc tế quá nhỏ.** Chỉ 18 ảnh — hệ số 0.40 chọn dựa trên số
 liệu này nên có sai số lớn. Nên tải thêm ~100 ảnh xe có trong Stanford Cars
 rồi đo lại.

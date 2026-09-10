@@ -1,6 +1,6 @@
 {
-  "Honda City Sedan 2023": {
-    "class_name": "Honda City Sedan 2023",
+  "Honda City Sedan": {
+    "class_name": "Honda City Sedan",
     "brand": "Honda",
     "model": "City",
     "body_style": "Sedan",
@@ -10,8 +10,8 @@
     "price_million_vnd": 559,
     "fuel_l_per_100km": 5.6
   },
-  "Hyundai Accent Sedan 2024": {
-    "class_name": "Hyundai Accent Sedan 2024",
+  "Hyundai Accent Sedan": {
+    "class_name": "Hyundai Accent Sedan",
     "brand": "Hyundai",
     "model": "Accent",
     "body_style": "Sedan",
@@ -87,8 +87,8 @@
     "price_million_vnd": 658,
     "fuel_l_per_100km": 6.2
   },
-  "Toyota Vios Sedan 2023": {
-    "class_name": "Toyota Vios Sedan 2023",
+  "Toyota Vios Sedan": {
+    "class_name": "Toyota Vios Sedan",
     "brand": "Toyota",
     "model": "Vios",
     "body_style": "Sedan",
