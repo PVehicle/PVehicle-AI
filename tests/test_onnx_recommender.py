@@ -14,11 +14,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.rec.onnx_recommender import ONNX_MODEL_PATH  # noqa: E402
 from src.rec.recommender import CarRecommender  # noqa: E402
 
-SAMPLE_CARS = [
-    "BMW M3 Coupe 2012",
-    "Honda Odyssey Minivan 2012",
-    "Ferrari FF Coupe 2012",
-]
+def sample_cars(recommender, count: int = 3) -> list[str]:
+    """Lay vai ten xe co that tu bang thong so.
+
+    Khong viet cung ten xe: ten lop co the doi (vi du bo nam san xuat),
+    test se hong ma khong phai vi loi that.
+    """
+    return recommender.specs["class_name"].head(count).tolist()
 
 
 @unittest.skipUnless(
@@ -33,6 +35,8 @@ class TestOnnxRecommender(unittest.TestCase):
         from src.rec.onnx_recommender import OnnxRecommender
 
         cls.pandas_rec = CarRecommender()
+        cls.samples = sample_cars(cls.pandas_rec)
+        cls.target = cls.samples[0]
         cls.onnx_rec = OnnxRecommender(base=cls.pandas_rec)
 
     def test_cho_ket_qua_giong_ban_pandas(self):
@@ -40,7 +44,7 @@ class TestOnnxRecommender(unittest.TestCase):
 
         Neu khac nhau thi so lieu do thoi gian tro nen vo nghia.
         """
-        for name in SAMPLE_CARS:
+        for name in self.samples:
             with self.subTest(car=name):
                 expected = [
                     r.class_name
@@ -53,7 +57,7 @@ class TestOnnxRecommender(unittest.TestCase):
                 self.assertEqual(expected, actual)
 
     def test_khong_chua_chinh_xe_truy_van(self):
-        target = "BMW M3 Coupe 2012"
+        target = self.target
         names = [
             r.class_name for r in self.onnx_rec.recommend_similar(target)
         ]
@@ -62,13 +66,13 @@ class TestOnnxRecommender(unittest.TestCase):
     def test_sap_xep_giam_dan_theo_diem(self):
         scores = [
             r.score
-            for r in self.onnx_rec.recommend_similar("BMW M3 Coupe 2012")
+            for r in self.onnx_rec.recommend_similar(self.target)
         ]
         self.assertEqual(scores, sorted(scores, reverse=True))
 
     def test_gioi_han_so_luong(self):
         results = self.onnx_rec.recommend_similar(
-            "BMW M3 Coupe 2012", top_n=3
+            self.target, top_n=3
         )
         self.assertLessEqual(len(results), 3)
 

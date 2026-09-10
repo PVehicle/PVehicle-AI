@@ -46,6 +46,9 @@ class TestRecommender(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.rec = CarRecommender()
+        # Lay ten xe tu du lieu that, khong viet cung.
+        cls.sample = cls.rec.specs['class_name'].iloc[0]
+        cls.sample2 = cls.rec.specs['class_name'].iloc[1]
 
     def test_nap_it_nhat_196_xe(self):
         """196 dong xe quoc te, cong them xe Viet Nam neu co mo hinh VN.
@@ -104,19 +107,20 @@ class TestRecommender(unittest.TestCase):
         self.assertLessEqual(len(self.rec.recommend_by_needs(top_n=3)), 3)
 
     def test_xe_tuong_tu_khong_chua_chinh_no(self):
-        target = "BMW M3 Coupe 2012"
+        target = self.sample
         names = [r.class_name for r in self.rec.recommend_similar(target)]
         self.assertNotIn(target, names)
 
     def test_xe_tuong_tu_cung_kieu_dang(self):
         """Kieu dang co trong so cao nen ket qua phai cung loai."""
-        results = self.rec.recommend_similar("Honda Odyssey Minivan 2012")
-        self.assertEqual(results[0].body_style, "Minivan")
+        row = self.rec.get_car(self.sample2)
+        results = self.rec.recommend_similar(self.sample2)
+        self.assertEqual(results[0].body_style, row["body_style"])
 
     def test_xe_tuong_tu_sap_xep_giam_dan(self):
         scores = [
             r.score
-            for r in self.rec.recommend_similar("BMW M3 Coupe 2012")
+            for r in self.rec.recommend_similar(self.sample)
         ]
         self.assertEqual(scores, sorted(scores, reverse=True))
 
@@ -125,9 +129,9 @@ class TestRecommender(unittest.TestCase):
             self.rec.recommend_similar("Xe Khong Co That 2099")
 
     def test_get_car(self):
-        row = self.rec.get_car("BMW M3 Coupe 2012")
+        row = self.rec.get_car(self.sample)
         self.assertIsNotNone(row)
-        self.assertEqual(row["body_style"], "Coupe")
+        self.assertEqual(row["class_name"], self.sample)
         self.assertIsNone(self.rec.get_car("Xe Khong Co That 2099"))
 
     def test_thuoc_tinh_ho_tro_giao_dien(self):

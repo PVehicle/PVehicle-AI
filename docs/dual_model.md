@@ -83,6 +83,48 @@ khi gộp cho ra Hyundai Accent, Toyota Yaris, Toyota Vios, Ferrari 458 —
 Trường hợp Accent đáng chú ý: mô hình quốc tế **vừa tự tin hơn vừa đúng**
 (đúng hãng, đúng dòng, chỉ khác đời).
 
+## 2b. Tên lớp bỏ năm sản xuất
+
+Tất cả tên lớp đã **bỏ năm sản xuất** — `Toyota Camry Sedan 2024` thành
+`Toyota Camry Sedan`.
+
+Lý do: nhãn đời xe không đáng tin (mô hình VN) và cũng không cần thiết cho
+mục đích sử dụng. Người dùng quan tâm "xe gì" hơn là "đời nào".
+
+### Ngoại lệ: 15 lớp giữ nguyên năm
+
+Bỏ năm sẽ làm một số lớp **trùng tên** — mô hình vẫn xuất ra hai lớp riêng
+nhưng người dùng thấy hai dòng giống hệt, và module tư vấn tra sai thông số
+(hai xe cùng tên, giá khác nhau).
+
+**7 cặp trong Stanford Cars** chỉ khác nhau ở năm:
+
+| Lớp | Các đời |
+| :--- | :--- |
+| Audi S4 Sedan | 2007, 2012 |
+| Bentley Continental GT Coupe | 2007, 2012 |
+| Dodge Caliber Wagon | 2007, 2012 |
+| Dodge Durango SUV | 2007, 2012 |
+| Ford F-150 Regular Cab | 2007, 2012 |
+| Honda Odyssey Minivan | 2007, 2012 |
+| Volkswagen Golf Hatchback | 1991, 2012 |
+
+**1 lớp xe VN** trùng với mô hình quốc tế: `Toyota Camry Sedan 2024` giữ
+năm vì Stanford Cars đã có `Toyota Camry Sedan`.
+
+Kết quả: **216/216 tên duy nhất**, không còn trùng ở đâu.
+
+### Áp dụng
+
+```powershell
+.\.venv\Scripts\python.exe scripts/strip_year_from_labels.py --dry-run
+.\.venv\Scripts\python.exe scripts/strip_year_from_labels.py
+```
+
+Script tự phát hiện các lớp sẽ trùng tên và giữ nguyên năm cho chúng.
+**Không cần train lại** — chỉ đổi nhãn hiển thị, thứ tự lớp giữ nguyên
+(thứ tự này ứng với chỉ số đầu ra của mô hình).
+
 ## 3. Kết quả trong response
 
 Mỗi kết quả nhận diện mang thêm hai trường:

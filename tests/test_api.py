@@ -102,22 +102,31 @@ class TestCarsEndpoints(unittest.TestCase):
         self.assertLess(data["price_min"], data["price_max"])
 
     def test_tra_cuu_mot_dong_xe(self):
-        response = self.client.get("/api/v1/cars/Tesla Model S Sedan 2012")
+        # Lay ten xe tu API thay vi viet cung: ten lop co the doi.
+        name = self.client.get(
+            "/api/v1/cars?limit=1"
+        ).json()["cars"][0]["class_name"]
+
+        response = self.client.get(f"/api/v1/cars/{name}")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["brand"], "Tesla")
+        self.assertEqual(response.json()["class_name"], name)
 
     def test_ten_xe_khong_ton_tai_tra_404(self):
         response = self.client.get("/api/v1/cars/Xe Khong Co That 2099")
         self.assertEqual(response.status_code, 404)
 
     def test_tim_xe_tuong_tu(self):
+        name = self.client.get(
+            "/api/v1/cars?limit=1"
+        ).json()["cars"][0]["class_name"]
+
         response = self.client.get(
-            "/api/v1/cars/Tesla Model S Sedan 2012/similar?top_n=3"
+            f"/api/v1/cars/{name}/similar?top_n=3"
         )
         data = response.json()
         self.assertEqual(data["count"], 3)
         names = [car["class_name"] for car in data["cars"]]
-        self.assertNotIn("Tesla Model S Sedan 2012", names)
+        self.assertNotIn(name, names)
 
 
 @unittest.skipUnless(API_AVAILABLE, "Chua cai fastapi/httpx")
